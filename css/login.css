@@ -1,0 +1,16 @@
+header {
+    background-color: #cececf;
+    padding: 20px;
+    width: 30%;
+    align-items: flex-start;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: flex-start;
+    height: 10vh;
+}
+
+body {
+    margin:0%
+}
