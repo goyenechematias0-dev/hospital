@@ -1,0 +1,118 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Datos iniciales de simulación si el storage está vacío
+    let ambulancias = JSON.parse(localStorage.getItem('ambulancias')) || [
+        { id: 1, matricula: 'SAB-1234', modelo: 'Mercedes-Benz Sprinter', estado: 'Disponible' },
+        { id: 2, matricula: 'SAB-5678', modelo: 'Renault Master', estado: 'En traslado' }
+    ];
+
+    const formAmbulancia = document.getElementById('form-ambulancia');
+    const formTraslado = document.getElementById('form-traslado');
+    const tablaAmbulancias = document.getElementById('tabla-ambulancias');
+    const selectAmbulancia = document.getElementById('ambulancia');
+
+    // READ: Renderizar la tabla de ambulancias
+    function renderizarAmbulancias() {
+        if (!tablaAmbulancias) return;
+        tablaAmbulancias.innerHTML = '';
+        selectAmbulancia.innerHTML = '<option value="">Seleccione una ambulancia...</option>';
+
+        ambulancias.forEach(amb => {
+            // Llenar tabla
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${amb.id}</td>
+                <td>${amb.matricula}</td>
+                <td>${amb.modelo}</td>
+                <td><strong>${amb.estado}</strong></td>
+                <td>
+                    <button onclick="editarAmbulancia(${amb.id})">Editar</button>
+                    <button onclick="eliminarAmbulancia(${amb.id})">Eliminar</button>
+                </td>
+            `;
+            tablaAmbulancias.appendChild(fila);
+
+            // Llenar select del formulario de traslados (solo si está disponible)
+            if (amb.estado === 'Disponible') {
+                const opt = document.createElement('option');
+                opt.value = amb.id;
+                opt.textContent = `${amb.matricula} (${amb.modelo})`;
+                selectAmbulancia.appendChild(opt);
+            }
+        });
+
+        // Guardar cambios en el navegador
+        localStorage.setItem('ambulancias', JSON.stringify(ambulancias));
+    }
+
+    // CREATE / UPDATE: Agregar o Editar Ambulancia
+    if (formAmbulancia) {
+        formAmbulancia.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = document.getElementById('amb-id').value;
+            const matricula = document.getElementById('amb-matricula').value;
+            const modelo = document.getElementById('amb-modelo').value;
+            const estado = document.getElementById('amb-estado').value;
+
+            if (id) {
+                // UPDATE
+                const amb = ambulancias.find(a => a.id == id);
+                amb.matricula = matricula;
+                amb.modelo = modelo;
+                amb.estado = estado;
+                document.getElementById('btn-guardar-amb').value = 'Agregar Ambulancia';
+            } else {
+                // CREATE
+                const nuevaAmbulancia = {
+                    id: Date.now(),
+                    matricula,
+                    modelo,
+                    estado
+                };
+                ambulancias.push(nuevaAmbulancia);
+            }
+
+            formAmbulancia.reset();
+            document.getElementById('amb-id').value = '';
+            renderizarAmbulancias();
+        });
+    }
+
+    // EDITAR (Función Global)
+    window.editarAmbulancia = (id) => {
+        const amb = ambulancias.find(a => a.id == id);
+        if (amb) {
+            document.getElementById('amb-id').value = amb.id;
+            document.getElementById('amb-matricula').value = amb.matricula;
+            document.getElementById('amb-modelo').value = amb.modelo;
+            document.getElementById('amb-estado').value = amb.estado;
+            document.getElementById('btn-guardar-amb').value = 'Guardar Cambios';
+        }
+    };
+
+    // DELETE (Función Global)
+    window.eliminarAmbulancia = (id) => {
+        if (confirm('¿Seguro que deseas eliminar esta ambulancia?')) {
+            ambulancias = ambulancias.filter(a => a.id != id);
+            renderizarAmbulancias();
+        }
+    };
+
+    // REGISTRO DE TRASLADO
+    if (formTraslado) {
+        formTraslado.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const ambId = selectAmbulancia.value;
+            
+            // Marcar ambulancia como 'En traslado'
+            const amb = ambulancias.find(a => a.id == ambId);
+            if (amb) amb.estado = 'En traslado';
+
+            alert('Traslado registrado con éxito.');
+            formTraslado.reset();
+            renderizarAmbulancias();
+        });
+    }
+
+    // Carga inicial
+    renderizarAmbulancias();
+});
