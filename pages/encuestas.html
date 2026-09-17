@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuestas y Consultas - MBM Médica</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h2>Encuestas y Consultas</h2>
+        <nav>
+            <a href="../index.html">Inicio</a> |
+            <a href="traslados.html">Traslados</a> |
+            <a href="documentos.html">Documentos</a> |
+            <a href="encuestas.html">Encuestas</a> |
+            <a href="login.html">Cerrar Sesión</a>
+        </nav>
+    </header>
+
+    <main class="form-container">
+        <h2>Encuesta de Satisfacción del Paciente</h2>
+        <form id="form-encuestas">
+            <label for="calificacion">¿Cómo califica la atención recibida?</label><br>
+            <select id="calificacion" name="calificacion">
+                <option value="excelente">Excelente</option>
+                <option value="buena">Buena</option>
+                <option value="regular">Regular</option>
+                <option value="mala">Mala</option>
+            </select><br><br>
+
+            <label for="comentarios">Comentarios u observaciones:</label><br>
+            <textarea id="comentarios" name="comentarios" rows="4" style="width: 100%; border-radius: 4px; border: 1px solid #ccc;"></textarea><br><br>
+
+            <button type="submit">Enviar Encuesta</button>
+        </form>
+    </main>
+
+    <footer style="text-align: center; margin-top: 20px;">
+        <p>&copy; 2026 MBM Médica - Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>
