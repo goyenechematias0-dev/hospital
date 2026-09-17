@@ -113,3 +113,31 @@ footer {
     font-size: 14px;
     color: #666;
 }
+/* Estilos para la barra de navegación superior */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a365d;
+    padding: 12px 24px;
+    color: #ffffff;
+}
+
+header h1, header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+nav a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
