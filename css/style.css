@@ -141,18 +141,19 @@ nav a:hover {
     opacity: 0.8;
     text-decoration: underline;
 }
-/* Estilo global para botones de formulario */
-button[type="submit"], button {
-    background-color: #1a365d;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+/* Estilo de botones para todos los formularios */
+button, input[type="submit"] {
+    background-color: #1a365d !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    margin-top: 10px !important;
+    transition: background-color 0.2s !important;
 }
 
-button[type="submit"]:hover, button:hover {
-    background-color: #2c5282;
+button:hover, input[type="submit"]:hover {
+    background-color: #2c5282 !important;
 }
