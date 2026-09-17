@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const formEncuestas = document.getElementById("form-encuestas");
 
     if (formEncuestas) {
-        formEncuestas.addEventListener("submit", (e) => {
+        formEncuestas.addEventListener("submit", async (e) => {
             e.preventDefault();
 
             const calificacion = document.getElementById("calificacion").value;
@@ -13,18 +13,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Objeto listo para enviar al backend (PHP)
-            const datosEncuesta = {
-                calificacion,
-                comentarios,
-                fecha: new Date().toISOString()
-            };
+            const datosEncuesta = { calificacion, comentarios };
 
-            console.log("Datos capturados:", datosEncuesta);
-            alert("¡Encuesta enviada con éxito!");
+            try {
+                // Enviar datos al archivo PHP
+                const response = await fetch("../../php/guardar_encuesta.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(datosEncuesta)
+                });
 
-            // Limpiar el formulario
-            formEncuestas.reset();
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    alert("¡Encuesta guardada con éxito en la base de datos!");
+                    formEncuestas.reset();
+                } else {
+                    alert("Error al guardar: " + resultado.message);
+                }
+            } catch (error) {
+                console.error("Error al conectar con el servidor:", error);
+                alert("¡Formulario validado! (Recuerda que para guardar en la base de datos debes ejecutar un servidor PHP local como XAMPP).");
+                formEncuestas.reset();
+            }
         });
     }
 });
