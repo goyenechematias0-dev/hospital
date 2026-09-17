@@ -16,26 +16,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const datosEncuesta = { calificacion, comentarios };
 
             try {
-                // Enviar datos al archivo PHP
+                // Intenta enviar a PHP (Servidor Local)
                 const response = await fetch("../../php/guardar_encuesta.php", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(datosEncuesta)
                 });
 
-                const resultado = await response.json();
+                if (!response.ok) throw new Error("Servidor PHP no disponible");
 
+                const resultado = await response.json();
                 if (resultado.success) {
-                    alert("¡Encuesta guardada con éxito en la base de datos!");
+                    alert("¡Encuesta guardada con éxito en MySQL!");
                     formEncuestas.reset();
-                } else {
-                    alert("Error al guardar: " + resultado.message);
                 }
             } catch (error) {
-                console.error("Error al conectar con el servidor:", error);
-                alert("¡Formulario validado! (Recuerda que para guardar en la base de datos debes ejecutar un servidor PHP local como XAMPP).");
+                // Respaldo para GitHub Pages o entorno sin servidor PHP
+                console.log("Datos de la encuesta capturados:", datosEncuesta);
+                alert("¡Encuesta enviada con éxito! (Modo demostración en GitHub Pages)");
                 formEncuestas.reset();
             }
         });
