@@ -1,0 +1,26 @@
+CREATE TABLE USUARIOS (
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    cedula VARCHAR(20) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE DOCUMENTOS (
+    id_documento INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    titulo VARCHAR(100),
+    categoria VARCHAR(50),
+    fecha_subida DATE,
+    ruta_archivo VARCHAR(255),
+    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario)
+);
+
+CREATE TABLE TRASLADOS (
+    id_traslado INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    origen VARCHAR(150) NOT NULL,
+    destino VARCHAR(150) NOT NULL,
+    acompanante VARCHAR(100),
+    fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario)
+);

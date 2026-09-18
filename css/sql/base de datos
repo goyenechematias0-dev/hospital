@@ -1,0 +1,28 @@
+USE hospital_db;
+
+-- Tabla de Ambulancias
+CREATE TABLE IF NOT EXISTS AMBULANCIAS (
+    id_ambulancia INT PRIMARY KEY AUTO_INCREMENT,
+    matricula VARCHAR(20) UNIQUE NOT NULL,
+    modelo VARCHAR(50) NOT NULL,
+    estado ENUM('Disponible', 'En traslado', 'Mantenimiento') DEFAULT 'Disponible'
+);
+
+-- Tabla de Traslados (vinculada a Usuarios y Ambulancias)
+CREATE TABLE IF NOT EXISTS TRASLADOS (
+    id_traslado INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    id_ambulancia INT,
+    origen VARCHAR(150) NOT NULL,
+    destino VARCHAR(150) NOT NULL,
+    acompanante VARCHAR(100),
+    fecha_solicitud DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_ambulancia) REFERENCES AMBULANCIAS(id_ambulancia) ON DELETE SET NULL
+);
+
+-- Datos de prueba para ambulancias
+INSERT INTO AMBULANCIAS (matricula, modelo, estado) VALUES
+('SAB-1234', 'Mercedes-Benz Sprinter', 'Disponible'),
+('SAB-5678', 'Renault Master', 'En traslado'),
+('SAB-9012', 'Ford Transit', 'Mantenimiento');

@@ -1,0 +1,16 @@
+-- CREATE (Registrar nueva ambulancia)
+INSERT INTO AMBULANCIAS (matricula, modelo, estado) 
+VALUES ('SAB-4321', 'Peugeot Boxer', 'Disponible');
+
+-- READ (Obtener todas las ambulancias / Filtrar disponibles)
+SELECT * FROM AMBULANCIAS;
+SELECT * FROM AMBULANCIAS WHERE estado = 'Disponible';
+
+-- UPDATE (Cambiar estado o datos de una ambulancia)
+UPDATE AMBULANCIAS 
+SET estado = 'En traslado' 
+WHERE id_ambulancia = 1;
+
+-- DELETE (Eliminar una ambulancia)
+DELETE FROM AMBULANCIAS 
+WHERE id_ambulancia = 3;

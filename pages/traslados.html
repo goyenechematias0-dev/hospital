@@ -1,39 +1,90 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Traslados - MBM Médica</title>
-  <link rel="stylesheet" href="login.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Traslados y Ambulancias - MBM Médica</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Gestión de Traslados</h1>
-    <nav>
-      <a href="index.html">Inicio</a> |
-      <a href="traslados.html">Traslados</a> |
-      <a href="login.html">Cerrar Sesión</a>
-    </nav>
-  </header>
+    <header>
+        <h1>Gestión de Traslados y Ambulancias</h1>
+        <nav>
+            <a href="../index.html">Inicio</a> |
+            <a href="traslados.html">Traslados</a> |
+            <a href="documentos.html">Documentos</a> |
+            <a href="login.html">Cerrar Sesión</a>
+        </nav>
+    </header>
 
-  <main>
-    <h2>Solicitar Nuevo Traslado</h2>
-    <form id="form-traslado">
-      <label for="origen">Origen:</label><br>
-      <input type="text" id="origen" name="origen" required><br><br>
+    <main>
+        <!-- SECCIÓN 1: SOLICITAR TRASLADO -->
+        <section>
+            <h2>Solicitar Nuevo Traslado</h2>
+            <form id="form-traslado">
+                <label for="origen">Origen:</label>
+                <input type="text" id="origen" required>
 
-      <label for="destino">Destino:</label><br>
-      <input type="text" id="destino" name="destino" required><br><br>
+                <label for="destino">Destino:</label>
+                <input type="text" id="destino" required>
 
-      <label for="acompañante">Acompañante:</label><br>
-      <input type="text" id="acompañante" name="acompañante"><br><br>
+                <label for="acompanante">Acompañante:</label>
+                <input type="text" id="acompanante">
 
-      <input type="submit" value="Registrar Traslado">
-    </form>
-  </main>
+                <label for="ambulancia">Asignar Ambulancia:</label>
+                <select id="ambulancia" required>
+                    <option value="">Seleccione una ambulancia...</option>
+                </select>
 
-  <footer>
-    <p>&copy; 2026 MBM Médica - Todos los derechos reservados.</p>
-  </footer>
+                <input type="submit" value="Registrar Traslado">
+            </form>
+        </section>
+
+        <!-- SECCIÓN 2: CRUD DE AMBULANCIAS -->
+        <section>
+            <h2>Gestión de Flota de Ambulancias</h2>
+            
+            <form id="form-ambulancia">
+                <input type="hidden" id="amb-id">
+                
+                <label for="amb-matricula">Matrícula:</label>
+                <input type="text" id="amb-matricula" placeholder="Ej: SAB-1234" required>
+
+                <label for="amb-modelo">Modelo:</label>
+                <input type="text" id="amb-modelo" placeholder="Ej: Mercedes-Benz" required>
+
+                <label for="amb-estado">Estado:</label>
+                <select id="amb-estado">
+                    <option value="Disponible">Disponible</option>
+                    <option value="En traslado">En traslado</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                </select>
+
+                <input type="submit" id="btn-guardar-amb" value="Agregar Ambulancia">
+            </form>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Matrícula</th>
+                        <th>Modelo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-ambulancias">
+                    <!-- Filas generadas dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MBM Médica - Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="../js/traslados.js"></script>
+    <script src="../js/main.js"></script>
 </body>
 </html>
