@@ -20,13 +20,18 @@
 
     <main class="form-container">
         <h2>Encuesta de Satisfacción del Paciente</h2>
-        <form id="form-encuestas">
+        <form id="form-encuestas" action="../php/guardar_encuesta.php" method="POST">
+            
+            <label for="titulo">Asunto / Título:</label><br>
+            <input type="text" id="titulo" name="titulo" placeholder="Ej: Atención en traslado" required style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;"><br><br>
+
             <label for="calificacion">¿Cómo califica la atención recibida?</label><br>
-            <select id="calificacion" name="calificacion">
-                <option value="excelente">Excelente</option>
-                <option value="buena">Buena</option>
-                <option value="regular">Regular</option>
-                <option value="mala">Mala</option>
+            <select id="calificacion" name="calificacion" required style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="">Seleccione una opción...</option>
+                <option value="Excelente">Excelente</option>
+                <option value="Buena">Buena</option>
+                <option value="Regular">Regular</option>
+                <option value="Mala">Mala</option>
             </select><br><br>
 
             <label for="comentarios">Comentarios u observaciones:</label><br>
