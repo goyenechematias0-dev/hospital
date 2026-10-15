@@ -157,3 +157,11 @@ button, input[type="submit"] {
 button:hover, input[type="submit"]:hover {
     background-color: #2c5282 !important;
 }
+.card {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
