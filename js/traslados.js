@@ -36,7 +36,7 @@ nav a:hover {
 }
 
 main {
-    max-width: 1200px; /* <--- Cámbialo de 900px a 1200px para dar espacio al mapa */
+  max-width: 95%; /* O puedes usar un número fijo más grande como 1400px */
     margin: 30px auto;
     padding: 20px;
     background: #ffffff;
