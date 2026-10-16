@@ -3,43 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Traslados y Mapa</title>
     <link rel="stylesheet" href="../css/trasladosmap.css" />
-    <h1>Traslado</h1>
+  </head>
+  <body>
 
-      <div class="controls">
-        <label for="departamento">Departamento:</label>
+    <div class="container">
+      <h1>Traslado</h1>
 
-        <select id="departamento" name="departamento">
- 
-            <option value="">-- Seleccionar --</option>
-            <option value="Artigas">Artigas</option>
-            <option value="Canelones">Canelones</option>
-            <option value="Cerro Largo">Cerro Largo</option>
-            <option value="Colonia">Colonia</option>
-            <option value="Durazno">Durazno</option>
-            <option value="Flores">Flores</option>
-            <option value="Florida">Florida</option>
-            <option value="Lavalleja">Lavalleja</option>
-            <option value="Maldonado">Maldonado</option>
-            <option value="Montevideo">Montevideo</option>
-            <option value="Paysandu">Paysandú</option>
-            <option value="Rio Negro">Río Negro</option>
-            <option value="Rivera">Rivera</option>
-            <option value="Rocha">Rocha</option>
-            <option value="Salto">Salto</option>
-            <option value="San Jose">San José</option>
-            <option value="Soriano">Soriano</option>
-            <option value="Tacuarembo">Tacuarembó</option>
-            <option value="Treinta y Tres">Treinta y Tres</option>
-</select>
-        <button type="button" id="generatePinBtn"></button>
+      <!-- Contenedor Flex para separar el formulario (izquierda) y el mapa (derecha) -->
+      <div style="display: flex; gap: 20px; align-items: flex-start;">
+
+        <!-- Izquierda: Controles y formulario -->
+        <div style="flex: 1;">
+          <div class="controls">
+            <label for="departamento">Departamento:</label>
+            <select id="departamento" name="departamento">
+              <option value="">-- Seleccionar --</option>
+              <option value="Artigas">Artigas</option>
+              <option value="Canelones">Canelones</option>
+              <option value="Cerro Largo">Cerro Largo</option>
+              <option value="Colonia">Colonia</option>
+              <option value="Durazno">Durazno</option>
+              <option value="Flores">Flores</option>
+              <option value="Florida">Florida</option>
+              <option value="Lavalleja">Lavalleja</option>
+              <option value="Maldonado">Maldonado</option>
+              <option value="Montevideo">Montevideo</option>
+              <option value="Paysandu">Paysandú</option>
+              <option value="Rio Negro">Río Negro</option>
+              <option value="Rivera">Rivera</option>
+              <option value="Rocha">Rocha</option>
+              <option value="Salto">Salto</option>
+              <option value="San Jose">San José</option>
+              <option value="Soriano">Soriano</option>
+              <option value="Tacuarembo">Tacuarembó</option>
+              <option value="Treinta y Tres">Treinta y Tres</option>
+            </select>
+            <button type="button" id="generatePinBtn">Buscar</button>
+          </div>
+          <div class="pin-status" id="pinStatus"></div>
+        </div>
+
+        <!-- Derecha: El mapa -->
+        <div style="flex: 1; height: 450px; background: #e2e8f0; border-radius: 10px;" id="map">
+          <!-- Aquí se cargará tu mapa -->
+        </div>
+
       </div>
-
-      <div class="pin-status" id="pinStatus"></div>
     </div>
 
-   
+    <!-- Archivo JavaScript para la lógica -->
+    <script src="../js/trasladosmap.js"></script>
   </body>
- 
-
 </html>

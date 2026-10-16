@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {
     margin: 0;
     padding: 0;
@@ -50,12 +36,11 @@ nav a:hover {
 }
 
 main {
-    max-width: 900px;
+    max-width: 1200px; /* <--- Cámbialo de 900px a 1200px para dar espacio al mapa */
     margin: 30px auto;
     padding: 20px;
     background: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 h2 {
@@ -126,4 +111,15 @@ footer {
     margin-top: 40px;
     font-size: 14px;
     color: #666;
+}
+
+/* Contenedor de dos columnas: izquierda y derecha */
+.layout-columnas {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.layout-columnas > div {
+    flex: 1;
 }
