@@ -17,7 +17,7 @@
 
         <!-- Izquierda: Controles y formulario -->
         <div style="flex: 1;">
-          <div class="controls">
+        <div class="controls" style="flex-direction: column; align-items: stretch; gap: 10px;">
             <label for="departamento">Departamento:</label>
             <select id="departamento" name="departamento">
               <option value="">-- Seleccionar --</option>
@@ -41,13 +41,17 @@
               <option value="Tacuarembo">Tacuarembó</option>
               <option value="Treinta y Tres">Treinta y Tres</option>
             </select>
-            <button type="button" id="generatePinBtn">Buscar</button>
+
+            <label for="direccion">Ingresar dirección:</label>
+            <input type="text" id="direccion" name="direccion" placeholder="Ej: Av. Italia 2870" style="padding: 12px 14px; border: 1px solid #3777d6; border-radius: 10px; font-size: 1rem;" />
+            
+            <button type="button" id="generatePinBtn">Generar Pin</button>
           </div>
           <div class="pin-status" id="pinStatus"></div>
         </div>
 
         <!-- Derecha: El mapa -->
-        <div style="flex: 1; height: 450px; background: #e2e8f0; border-radius: 17px;" id="map">
+        <div style="flex: 1; height: 450px; background: #e2e8f0; border-radius: 18px;" id="map">
           <!-- Aquí se cargará tu mapa -->
         </div>
 
