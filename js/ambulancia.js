@@ -2,12 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         if (typeof map !== 'undefined') {
 
-            // Icono de ambulancia integrado para evitar errores de rutas
-            const iconoAmbulancia = L.divIcon({
-                className: 'custom-ambulance-icon',
-                html: '<div style="background-color: #ff4d4d; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); text-align: center; white-space: nowrap;">🚑 Amb</div>',
-                iconSize: [50, 24],
-                iconAnchor: [25, 12]
+            // Creamos el icono usando la imagen oficial de tu carpeta img
+            const iconoAmbulancia = L.icon({
+                iconUrl: '../img/ambulancia.png', // Ruta hacia tu carpeta img en XAMPP
+                iconSize: [45, 30],               // Ancho y alto de la imagen
+                iconAnchor: [22, 15],             // Punto central del icono
+                popupAnchor: [0, -15]             // Dónde se abre el cartelito
             });
 
             // Unidades de ambulancias en el mapa
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
-            console.log("Ambulancias con icono visible cargadas exitosamente.");
+            console.log("Ambulancias con imagen cargadas.");
         }
     }, 500);
 });
