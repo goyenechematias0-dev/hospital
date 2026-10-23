@@ -1,71 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Traslados y Mapa</title>
-    <link rel="stylesheet" href="../css/trasladosmap.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traslado - Sistema MBM Médica</title>
+    
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  </head>
-  <body>
+    
+    <!-- Leaflet Routing Machine CSS (Trazado de rutas) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    
+    <!-- Estilos CSS del proyecto -->
+    <link rel="stylesheet" href="../css/trasladosmap.css">
+</head>
+<body>
 
-    <div class="container">
-      <h1>Traslado</h1>
+    <div class="main-container" style="max-width: 1000px; margin: 20px auto; padding: 0 15px;">
+        <h2 class="title-header">Sistema MBM Médica - Control de Traslados</h2>
 
-      <!-- Contenedor Flex para separar el formulario (izquierda) y el mapa (derecha) -->
-      <div style="display: flex; gap: 20px; align-items: flex-start;">
+        <div class="content-wrapper">
+            <!-- Panel Izquierdo: Controles -->
+            <div class="form-panel">
+                <div class="form-group">
+                    <label for="departamento">Departamento:</label>
+                    <select id="departamento" class="form-control">
+                        <option value="">-- Seleccionar --</option>
+                        <option value="Artigas">Artigas</option>
+                        <option value="Canelones">Canelones</option>
+                        <option value="Cerro Largo">Cerro Largo</option>
+                        <option value="Colonia">Colonia</option>
+                        <option value="Durazno">Durazno</option>
+                        <option value="Flores">Flores</option>
+                        <option value="Florida">Florida</option>
+                        <option value="Lavalleja">Lavalleja</option>
+                        <option value="Maldonado">Maldonado</option>
+                        <option value="Montevideo" selected>Montevideo</option>
+                        <option value="Paysandú">Paysandú</option>
+                        <option value="Río Negro">Río Negro</option>
+                        <option value="Rivera">Rivera</option>
+                        <option value="Rocha">Rocha</option>
+                        <option value="Salto">Salto</option>
+                        <option value="San José">San José</option>
+                        <option value="Soriano">Soriano</option>
+                        <option value="Tacuarembó">Tacuarembó</option>
+                        <option value="Treinta y Tres">Treinta y Tres</option>
+                    </select>
+                </div>
 
-        <!-- Izquierda: Controles y formulario -->
-        <div style="flex: 1;">
-          <div class="controls" style="flex-direction: column; align-items: stretch; gap: 10px;">
-            <label for="departamento">Departamento:</label>
-            <select id="departamento" name="departamento">
-              <option value="">-- Seleccionar --</option>
-              <option value="Artigas">Artigas</option>
-              <option value="Canelones">Canelones</option>
-              <option value="Cerro Largo">Cerro Largo</option>
-              <option value="Colonia">Colonia</option>
-              <option value="Durazno">Durazno</option>
-              <option value="Flores">Flores</option>
-              <option value="Florida">Florida</option>
-              <option value="Lavalleja">Lavalleja</option>
-              <option value="Maldonado">Maldonado</option>
-              <option value="Montevideo">Montevideo</option>
-              <option value="Paysandu">Paysandú</option>
-              <option value="Rio Negro">Río Negro</option>
-              <option value="Rivera">Rivera</option>
-              <option value="Rocha">Rocha</option>
-              <option value="Salto">Salto</option>
-              <option value="San Jose">San José</option>
-              <option value="Soriano">Soriano</option>
-              <option value="Tacuarembo">Tacuarembó</option>
-              <option value="Treinta y Tres">Treinta y Tres</option>
-            </select>
+                <div class="form-group">
+                    <label for="direccion">Ingresar dirección de destino:</label>
+                    <input type="text" id="direccion" placeholder="Ej: Av. Italia 2870" class="form-control">
+                </div>
 
-            <label for="direccion">Ingresar dirección:</label>
-            <input type="text" id="direccion" name="direccion" placeholder="Ej: Av. Italia 2870" style="padding: 12px 14px; border: 1px solid #3777d6; border-radius: 10px; font-size: 1rem;" />
-            
-            <button type="button" id="generatePinBtn">Generar Pin</button>
+                <button type="button" class="btn-custom btn-primary" onclick="calcularRutaDesdeInput()">Generar Pin y Ruta</button>
+                
+                <button type="button" class="btn-custom btn-secondary" onclick="moverAmbulancia('Amb-01', -34.8917, -56.1555)">Mover Ambulancia 01</button>
 
-            <!-- Botón para mover la ambulancia visualmente -->
-            <button type="button" onclick="moverAmbulancia('Amb-01', -34.8935, -56.1590)" style="padding: 12px; background: #28a745; color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1rem; margin-top: 5px;">
-              Mover Ambulancia 01
-            </button>
-          </div>
-          <div class="pin-status" id="pinStatus"></div>
+                <hr class="divider">
+
+                <!-- Botones Interactivos de Unidades -->
+                <div class="action-buttons">
+                    <button type="button" class="btn-custom btn-success" onclick="agregarAmbulancia()">+ Crear Unidad</button>
+                    <button type="button" class="btn-custom btn-danger" onclick="eliminarAmbulancia()">- Eliminar Unidad</button>
+                </div>
+            </div>
+
+            <!-- Panel Derecho: El Mapa Leaflet con altura reducida -->
+            <div class="map-panel" style="height: 420px;">
+                <div id="map" style="width: 100%; height: 100%;"></div>
+            </div>
         </div>
-
-        <!-- Derecha: El mapa -->
-        <div style="flex: 1; height: 450px; background: #e2e8f0; border-radius: 18px;" id="map">
-          <!-- Aquí se cargará tu mapa -->
-        </div>
-
-      </div>
     </div>
 
-    <!-- Archivo JavaScript para la lógica -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="../js/trasladosmap.js"></script>
+    
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+    
+    <!-- Inicialización del mapa y corrección de renderizado -->
+    <script>
+        var map = L.map('map').setView([-34.8917, -56.1555], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Recalcula el tamaño exacto del mapa para que renderice sin zonas grises
+        setTimeout(function() {
+            map.invalidateSize();
+        }, 300);
+    </script>
+
+    <!-- Lógica de Ambulancias y Rutas -->
     <script src="../js/ambulancia.js"></script>
-  </body>
+</body>
 </html>
