@@ -54,8 +54,6 @@
                 </div>
 
                 <button type="button" class="btn-custom btn-primary" onclick="calcularRutaDesdeInput()">Generar Pin y Ruta</button>
-                
-                <button type="button" class="btn-custom btn-secondary" onclick="moverAmbulancia('Amb-01', -34.8917, -56.1555)">Mover Ambulancia 01</button>
 
                 <hr class="divider">
 
@@ -66,7 +64,7 @@
                 </div>
             </div>
 
-            <!-- Panel Derecho: El Mapa Leaflet con altura reducida -->
+            <!-- Panel Derecho: El Mapa Leaflet -->
             <div class="map-panel" style="height: 420px;">
                 <div id="map" style="width: 100%; height: 100%;"></div>
             </div>
@@ -88,7 +86,6 @@
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Recalcula el tamaño exacto del mapa para que renderice sin zonas grises
         setTimeout(function() {
             map.invalidateSize();
         }, 300);

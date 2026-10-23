@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
         if (typeof map !== 'undefined') {
 
-            // Icono SVG de Ambulancia interactiva
+            // Icono SVG de Ambulancia
             const svgAmbulancia = `
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="45" height="45">
                     <rect x="28" y="10" width="8" height="4" fill="#ff0000" rx="1"/>
@@ -27,105 +27,53 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             window.ambulancias = {};
+            window.intervaloSimulacion = null;
 
-            // Carga inicial de 10 ambulancias en zonas cercanas al Hospital de Clínicas
-            const totalAmbulancias = 10; 
-            let latBase = -34.8917;
-            let lngBase = -56.1555;
+            // Coordenadas base (Hospital de Clínicas)
+            const latHospital = -34.8917;
+            const lngHospital = -56.1555;
 
-            for (let i = 1; i <= totalAmbulancias; i++) {
-                let id = `Amb-${i < 10 ? '0' + i : i}`;
-                let offsetX = (Math.random() - 0.5) * 0.015;
-                let offsetY = (Math.random() - 0.5) * 0.015;
-                let lat = latBase + offsetX;
-                let lng = lngBase + offsetY;
+            // Inicialización de la unidad principal Amb-01
+            let marcadorPrincipal = L.marker([latHospital, lngHospital], { 
+                icon: iconoAmbulancia, 
+                draggable: true 
+            }).addTo(map).bindPopup("<b>Ambulancia Amb-01</b><br>Estado: Disponible");
 
-                let marcador = L.marker([lat, lng], { 
-                    icon: iconoAmbulancia, 
-                    draggable: true 
-                }).addTo(map).bindPopup(`<b>Ambulancia ${i < 10 ? '0' + i : i}</b>`);
+            window.ambulancias['Amb-01'] = {
+                nombre: 'Ambulancia 01',
+                lat: latHospital,
+                lng: lngHospital,
+                estado: 'Disponible',
+                marcador: marcadorPrincipal
+            };
 
-                marcador.on('dragend', function (event) {
-                    let posicion = event.target.getLatLng();
-                    if (window.ambulancias[id]) {
-                        window.ambulancias[id].lat = posicion.lat;
-                        window.ambulancias[id].lng = posicion.lng;
-                    }
-                });
+            // 1. OBTENER GEOLOCALIZACIÓN REAL DEL NAVEGADOR / GPS (Con alta precisión y zoom cercano)
+            window.obtenerUbicacionGPS = function() {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition((position) => {
+                        let latGPS = position.coords.latitude;
+                        let lngGPS = position.coords.longitude;
 
-                window.ambulancias[id] = {
-                    nombre: `Ambulancia ${i}`,
-                    lat: lat,
-                    lng: lng,
-                    marcador: marcador
-                };
-            }
-
-            // Función para mover ambulancia manualmente
-            window.moverAmbulancia = function(idAmbulancia, nuevaLat, nuevaLng) {
-                if (window.ambulancias && window.ambulancias[idAmbulancia]) {
-                    let amb = window.ambulancias[idAmbulancia];
-                    amb.lat = nuevaLat;
-                    amb.lng = nuevaLng;
-                    if (amb.marcador) {
-                        amb.marcador.setLatLng([nuevaLat, nuevaLng]);
-                        map.panTo([nuevaLat, nuevaLng]); 
-                    }
+                        // Actualiza la posición de la ambulancia y acerca el zoom a nivel de calle (16)
+                        window.ambulancias['Amb-01'].marcador.setLatLng([latGPS, lngGPS]);
+                        map.setView([latGPS, lngGPS], 16);
+                        
+                        window.ambulancias['Amb-01'].marcador.getPopup().setContent("<b>Ambulancia Amb-01</b><br>¡Ubicación GPS Real detectada!");
+                        window.ambulancias['Amb-01'].marcador.openPopup();
+                        console.log(`GPS Real obtenido: Lat ${latGPS}, Lng ${lngGPS}`);
+                    }, (error) => {
+                        alert("Error de GPS: Asegúrate de permitir el acceso a tu ubicación en el navegador. Detalle: " + error.message);
+                    }, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                } else {
+                    alert("Tu navegador no soporta geolocalización.");
                 }
             };
 
-            // Crear una nueva ambulancia dinámica
-            window.agregarAmbulancia = function() {
-                let contador = 11;
-                while (window.ambulancias[`Amb-${contador}`] || window.ambulancias[`Amb-0${contador}`]) {
-                    contador++;
-                }
-                let idAmbulancia = `Amb-${contador < 10 ? '0' + contador : contador}`;
-                let nombre = `Ambulancia ${contador}`;
-
-                let lat = latBase + (Math.random() - 0.5) * 0.015;
-                let lng = lngBase + (Math.random() - 0.5) * 0.015;
-
-                let marcador = L.marker([lat, lng], { 
-                    icon: iconoAmbulancia, 
-                    draggable: true 
-                }).addTo(map).bindPopup(`<b>${nombre}</b>`);
-
-                marcador.on('dragend', function (event) {
-                    let posicion = event.target.getLatLng();
-                    if (window.ambulancias[idAmbulancia]) {
-                        window.ambulancias[idAmbulancia].lat = posicion.lat;
-                        window.ambulancias[idAmbulancia].lng = posicion.lng;
-                    }
-                });
-
-                window.ambulancias[idAmbulancia] = {
-                    nombre: nombre,
-                    lat: lat,
-                    lng: lng,
-                    marcador: marcador
-                };
-
-                console.log(`${nombre} agregada.`);
-            };
-
-            // Eliminar última unidad o una unidad específica
-            window.eliminarAmbulancia = function(idAmbulancia) {
-                if (!idAmbulancia) {
-                    let keys = Object.keys(window.ambulancias);
-                    if (keys.length > 0) {
-                        idAmbulancia = keys[keys.length - 1];
-                    }
-                }
-
-                if (window.ambulancias && window.ambulancias[idAmbulancia]) {
-                    map.removeLayer(window.ambulancias[idAmbulancia].marcador);
-                    delete window.ambulancias[idAmbulancia];
-                    console.log(`Ambulancia ${idAmbulancia} eliminada.`);
-                }
-            };
-
-            // Trazado de rutas hacia cualquier departamento de Uruguay
+            // 2. SIMULAR MOVIMIENTO EN VIVO A LO LARGO DE LA RUTA
             window.controlRuta = null;
 
             window.calcularRutaDesdeInput = function() {
@@ -142,9 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                const latHospital = -34.8917;
-                const lngHospital = -56.1555;
-
                 let queryBusqueda = `${inputDir}, ${selectDepto}, Uruguay`;
 
                 fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(queryBusqueda)}`)
@@ -156,6 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             if (window.controlRuta) {
                                 map.removeControl(window.controlRuta);
+                            }
+
+                            if (window.intervaloSimulacion) {
+                                clearInterval(window.intervaloSimulacion);
                             }
 
                             window.controlRuta = L.Routing.control({
@@ -170,10 +119,37 @@ document.addEventListener("DOMContentLoaded", () => {
                                 }
                             }).addTo(map);
 
-                            map.setView([latDestino, lngDestino], 13);
-                            console.log("Ruta generada hacia: " + queryBusqueda);
+                            // Extraer ruta para mover la ambulancia dinámicamente
+                            window.controlRuta.on('routesfound', function(e) {
+                                let routes = e.routes;
+                                let summary = routes[0].summary;
+                                let tiempoEstimadoMin = Math.round(summary.totalTime / 60);
+                                let coordenadasCoordenadas = routes[0].coordinates;
+
+                                // Cambiar Estado a 'En Traslado'
+                                window.ambulancias['Amb-01'].estado = 'En Traslado';
+                                window.ambulancias['Amb-01'].marcador.getPopup().setContent(`<b>Ambulancia Amb-01</b><br>Estado: En Traslado<br>Tiempo Est.: ${tiempoEstimadoMin} min`);
+                                window.ambulancias['Amb-01'].marcador.openPopup();
+
+                                let paso = 0;
+                                let totalPasos = coordenadasCoordenadas.length;
+
+                                window.intervaloSimulacion = setInterval(() => {
+                                    if (paso < totalPasos) {
+                                        let puntoActual = coordenadasCoordenadas[paso];
+                                        window.ambulancias['Amb-01'].marcador.setLatLng([puntoActual.lat, puntoActual.lng]);
+                                        paso += Math.ceil(totalPasos / 40); // Progresión en directo
+                                    } else {
+                                        clearInterval(window.intervaloSimulacion);
+                                        window.ambulancias['Amb-01'].estado = 'Completado';
+                                        window.ambulancias['Amb-01'].marcador.getPopup().setContent("<b>Ambulancia Amb-01</b><br>Estado: Traslado Finalizado");
+                                        alert("¡La ambulancia ha llegado a destino!");
+                                    }
+                                }, 1000);
+                            });
+
                         } else {
-                            alert(`No se encontró la dirección "${inputDir}" en ${selectDepto}. Intenta ser más específico.`);
+                            alert(`No se encontró la dirección en ${selectDepto}.`);
                         }
                     })
                     .catch(error => {
@@ -181,7 +157,44 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
             };
 
-            console.log("Sistema de rutas MBM Médica cargado correctamente.");
+            // 3. CREAR Y ELIMINAR UNIDADES DINÁMICAMENTE
+            window.agregarAmbulancia = function() {
+                let contador = Object.keys(window.ambulancias).length + 1;
+                let idAmbulancia = `Amb-${contador < 10 ? '0' + contador : contador}`;
+                let nombre = `Ambulancia ${contador}`;
+
+                let lat = latHospital + (Math.random() - 0.5) * 0.015;
+                let lng = lngHospital + (Math.random() - 0.5) * 0.015;
+
+                let marcador = L.marker([lat, lng], { 
+                    icon: iconoAmbulancia, 
+                    draggable: true 
+                }).addTo(map).bindPopup(`<b>${nombre}</b><br>Estado: Disponible`);
+
+                window.ambulancias[idAmbulancia] = {
+                    nombre: nombre,
+                    lat: lat,
+                    lng: lng,
+                    estado: 'Disponible',
+                    marcador: marcador
+                };
+            };
+
+            window.eliminarAmbulancia = function(idAmbulancia) {
+                if (!idAmbulancia) {
+                    let keys = Object.keys(window.ambulancias);
+                    if (keys.length > 1) { // No elimina la unidad principal
+                        idAmbulancia = keys[keys.length - 1];
+                    }
+                }
+
+                if (window.ambulancias && window.ambulancias[idAmbulancia] && idAmbulancia !== 'Amb-01') {
+                    map.removeLayer(window.ambulancias[idAmbulancia].marcador);
+                    delete window.ambulancias[idAmbulancia];
+                }
+            };
+
+            console.log("Sistema MBM Médica listo.");
         }
     }, 500);
 });
