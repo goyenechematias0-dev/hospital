@@ -59,6 +59,28 @@ if (generatePinBtn) {
                 if (pinStatus) {
                     pinStatus.innerHTML = `✅ Pin generado con éxito para: <b>${queryBusqueda}</b>`;
                 }
+
+                // =========================================================
+                // ENVÍO AUTOMÁTICO DE DATOS A TU BASE DE DATOS (XAMPP / PHP)
+                // =========================================================
+                let formData = new FormData();
+                formData.append('origen', 'Hospital de Clínicas, Montevideo');
+                formData.append('destino', queryBusqueda);
+                formData.append('acompanante', 'Personal médico');
+
+                fetch('../php/guardarTraslados.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Respuesta de la BD:", data.mensaje);
+                })
+                .catch(error => {
+                    console.error("Error al registrar en PHP:", error);
+                });
+                // =========================================================
+
             } else {
                 if (pinStatus) {
                     pinStatus.innerHTML = `⚠️ No se encontró una ubicación exacta para "${queryBusqueda}". Mostrando ubicación por defecto.`;
