@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "hospital";
+$database = "hospital_clinicas"; // Ajusta esto a "hospital" o "hospital_clinicas" según cómo la hayas creado
 
 $conn = new mysqli($host, $user, $password, $database);
 

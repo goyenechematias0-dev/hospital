@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // Envío por fetch al archivo PHP
-                const respuesta = await fetch('../php/registroUsuario.php', {
+                const respuesta = await fetch('../php/registrarUsuario.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

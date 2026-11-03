@@ -1,39 +1,89 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema MBM Médica - Inicio</title>
- <link rel="stylesheet" href="./css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema MBM Médica - Panel Principal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+        }
+        .navbar {
+            background-color: #1a365d;
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .navbar-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .navbar-links a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #1a365d;
+            margin-top: 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        ul {
+            line-height: 1.8;
+        }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Sistema MBM Médica</h1>
-    <nav>
-            <a href="index.html">Inicio</a> |
-            <a href="./pages/traslados.html">Traslados</a> |
-            <a href="./pages/documentos.html">Documentos</a> |
-            <a href="./pages/encuestas.html">Encuestas</a> |
-            <a href="./pages/login.html">Cerrar Sesión</a>
-        </nav>
-  </header>
 
-  <main>
-    <h2>Panel Principal</h2>
-<section style="text-align: center; margin-top: 30px;">
-        <h3>Módulos Disponibles</h3>
-        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
-            <a href="./pages/traslados.html" class="btn-submit" style="text-decoration: none; padding: 12px 20px;">🚑 Gestión de Traslados</a>
-            <a href="./pages/documentos.html" class="btn-submit" style="text-decoration: none; padding: 12px 20px;">📁 Gestión de Documentos</a>
-            <a href="./pages/encuestas.html" class="btn-submit" style="text-decoration: none; padding: 12px 20px;">📋 Encuestas y Consultas</a>
+    <!-- Barra de navegación superior principal -->
+    <div class="navbar">
+        <span>Sistema MBM Médica</span>
+        <div class="navbar-links">
+            <a href="index.html">Inicio</a> | 
+            <a href="pages/trasladosmap.html">Traslados</a> | 
+            <a href="pages/documentos.html">Documentos</a> | 
+            <a href="pages/login.html">Cerrar Sesión</a>
         </div>
-    </section>
-      </ul>
-    </section>
-  </main>
+    </div>
 
-  <footer>
-    <p>&copy; 2026 MBM Médica - Todos los derechos reservados.</p>
-  </footer>
+    <div class="container">
+        <h2>Panel Principal</h2>
+        <p>Bienvenido al sistema de gestión hospitalaria.</p>
+        <h3>Módulos Disponibles</h3>
+        <ul>
+            <li><a href="pages/trasladosmap.html">Gestión de Traslados y Ambulancias</a></li>
+            <li><a href="pages/documentos.html">Gestión de Documentos</a></li>
+            <li><a href="pages/encuestas.html">Encuestas y Consultas</a></li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; color: #666; font-size: 13px;">
+        &copy; 2026 MBM Médica - Todos los derechos reservados.
+    </div>
+
 </body>
 </html>

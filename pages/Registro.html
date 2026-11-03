@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Funcionario - S.I.G.S.M.</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Hospital de Clínicas - MBM Médica</h1>
+        <nav>
+            <a href="login.html">Iniciar Sesión</a> | 
+            <a href="registro.html">Registrarse</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 400px; margin: 30px auto; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+        <h2>Registro de Nuevo Funcionario</h2>
+        
+        <!-- El formulario apunta al archivo PHP que procesará los datos -->
+        <form id="formRegistro" action="procesarRegistro.php" method="POST" onsubmit="return validarFormulario()">
+            
+            <label for="nombre">Nombre Completo:</label><br>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" style="width: 100%; margin-bottom: 15px; padding: 8px;"><br>
+
+            <label for="cedula">Cédula de Identidad:</label><br>
+            <input type="text" id="cedula" name="cedula" placeholder="Ej: 4xxxxxxx" style="width: 100%; margin-bottom: 15px; padding: 8px;"><br>
+
+            <label for="email">Correo Institucional:</label><br>
+            <input type="email" id="email" name="email" placeholder="usuario@hc.edu.uy" style="width: 100%; margin-bottom: 15px; padding: 8px;"><br>
+
+            <label for="password">Contraseña:</label><br>
+            <input type="password" id="password" name="password" placeholder="********" style="width: 100%; margin-bottom: 15px; padding: 8px;"><br>
+
+            <label for="confirm_password">Repetir Contraseña:</label><br>
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="********" style="width: 100%; margin-bottom: 15px; padding: 8px;"><br>
+
+            <button type="submit" style="width: 100%; padding: 10px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer;">Registrar Funcionario</button>
+        </form>
+    </main>
+
+    <!-- Script en JavaScript para validar antes de enviar -->
+    <script>
+        function validarFormulario() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const cedula = document.getElementById('cedula').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            // Validación de campos vacíos
+            if (nombre === "" || cedula === "" || email === "" || password === "" || confirmPassword === "") {
+                alert("Por favor, completa todos los campos del formulario.");
+                return false;
+            }
+
+            // Validación de coincidencia de contraseñas
+            if (password !== confirmPassword) {
+                alert("Las contraseñas no coinciden. Por favor, revísalas.");
+                return false;
+            }
+
+            // Si pasa las validaciones, permite el envío al PHP
+            return true;
+        }
+    </script>
+</body>
+</html>
