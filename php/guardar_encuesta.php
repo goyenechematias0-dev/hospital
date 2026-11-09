@@ -1,28 +1,50 @@
 <?php
-header("Content-Type: application/json");
-include "conexion.php";
+require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/helpers.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $calificacion = $_POST['calificacion'] ?? '';
-    $comentarios = $_POST['comentarios'] ?? '';
+$data = request_data();
 
-    if (empty($calificacion) || empty($comentarios)) {
-        echo json_encode(["success" => false, "message" => "Por favor completa todos los campos."]);
-        exit;
-    }
+$titulo       = campo($data, 'titulo');
+$calificacion = campo($data, 'calificacion');
+$comentarios  = campo($data, 'comentarios');
+$descripcion  = campo($data, 'descripcion');
+$id_usuario   = id_opcional($data, 'id_usuario');
 
-    $stmt = $conn->prepare("INSERT INTO encuestas (calificacion, comentarios) VALUES (?, ?)");
-    $stmt->bind_param("ss", $calificacion, $comentarios);
-
-    if ($stmt->execute()) {
-        echo json_encode(["success" => true, "message" => "Encuesta guardada con éxito."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Error al guardar en la base de datos."]);
-    }
-
-    $stmt->close();
-    $conn->close();
-} else {
-    echo json_encode(["success" => false, "message" => "Método no permitido."]);
+if ($titulo === '' || $calificacion === '') {
+    json_response([
+        'success' => false,
+        'exito'   => false,
+        'message' => 'El título y la calificación son obligatorios.',
+        'mensaje' => 'El título y la calificación son obligatorios.',
+    ], 422);
 }
-?>
+
+if ($descripcion === '') {
+    $descripcion = mb_substr($comentarios, 0, 250);
+}
+
+try {
+    $stmt = $conn->prepare(
+        'INSERT INTO encuesta (id_usuario, titulo, descripcion, calificacion, comentarios, activo)
+         VALUES (?, ?, ?, ?, ?, 1)'
+    );
+    $stmt->bind_param('issss', $id_usuario, $titulo, $descripcion, $calificacion, $comentarios);
+    $stmt->execute();
+    $id = $stmt->insert_id;
+    $stmt->close();
+
+    json_response([
+        'success'     => true,
+        'exito'       => true,
+        'message'     => 'Encuesta guardada con éxito.',
+        'mensaje'     => 'Encuesta guardada con éxito.',
+        'id_encuesta' => $id,
+    ], 201);
+} catch (Throwable $e) {
+    json_response([
+        'success' => false,
+        'exito'   => false,
+        'message' => 'Error al guardar la encuesta: ' . $e->getMessage(),
+        'mensaje' => 'Error al guardar la encuesta: ' . $e->getMessage(),
+    ], 500);
+}

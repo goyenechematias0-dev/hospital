@@ -1,0 +1,702 @@
+/* ============================================================
+   S.I.G.S.M. - Hospital de Clínicas
+   Estilo visual original del repositorio
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-color: #f4f6f9;
+    color: #333;
+    line-height: 1.5;
+}
+
+a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* ---------- Encabezado simple (login / registro) ---------- */
+.login-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 30px;
+}
+
+.login-header img {
+    width: 60px;
+    height: auto;
+}
+
+.login-brand {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a365d;
+}
+
+/* ---------- Login ---------- */
+.login-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.login-container img {
+    width: 50px;
+    height: auto;
+}
+
+.login-container h1 {
+    margin-top: 10px;
+    color: #1a365d;
+    font-size: 24px;
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 20px auto 0;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2d3748;
+}
+
+.form-container .registro-link {
+    display: block;
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* ---------- Contenedor general ---------- */
+.container {
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 30px 35px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container-wide {
+    max-width: 900px;
+}
+
+/* ---------- Barra de navegación interna ---------- */
+.navbar {
+    background-color: #1a365d;
+    color: #ffffff;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.navbar-brand .brand-badge {
+    display: none;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar-links a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.navbar-links a:hover {
+    text-decoration: underline;
+}
+
+.navbar-links a.active {
+    text-decoration: underline;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.user-avatar {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    background-color: #2c5282;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.user-chip small {
+    display: block;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    line-height: 1.1;
+}
+
+.navbar-user .btn {
+    margin-top: 0;
+}
+
+/* ---------- Contenido ---------- */
+.page {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.page-header {
+    background: #ffffff;
+    padding: 25px 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.page-header h1 {
+    color: #1a365d;
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 30px 35px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card + .card {
+    margin-top: 0;
+}
+
+.card h2 {
+    color: #1a365d;
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.card h3 {
+    color: #1a365d;
+    font-size: 17px;
+    margin-bottom: 12px;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.section-head h2,
+.section-head h3 {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* ---------- Estadísticas ---------- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #ffffff;
+    padding: 18px 20px;
+    border-radius: 8px;
+    border-left: 4px solid #1a365d;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .stat-value {
+    font-size: 26px;
+    font-weight: bold;
+    color: #1a365d;
+    line-height: 1.1;
+}
+
+.stat-card .stat-label {
+    margin-top: 3px;
+    color: #666;
+    font-size: 13px;
+}
+
+.stat-card.accent { border-left-color: #2c5282; }
+.stat-card.warning { border-left-color: #d69e2e; }
+.stat-card.success { border-left-color: #2f855a; }
+
+/* ---------- Módulos ---------- */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.module-card {
+    display: block;
+    padding: 20px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.module-card:hover {
+    border-color: #1a365d;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    text-decoration: none;
+}
+
+.module-icon {
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.module-card h3 {
+    color: #1a365d;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.module-card p {
+    color: #666;
+    font-size: 13px;
+}
+
+/* ---------- Formularios ---------- */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #2d3748;
+}
+
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="file"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    color: #333;
+    background: #ffffff;
+    border: 1px solid #cbd5e0;
+    border-radius: 4px;
+}
+
+.form-control:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1a365d;
+    box-shadow: 0 0 0 2px rgba(26, 54, 93, 0.15);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-help {
+    display: block;
+    margin-top: 4px;
+    color: #666;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+    display: inline-block;
+    background-color: #1a365d;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #2c5282;
+    text-decoration: none;
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-secondary {
+    background-color: #e2e8f0;
+    color: #1a365d;
+    border: 1px solid #cbd5e0;
+}
+
+.btn-secondary:hover {
+    background-color: #cbd5e0;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+}
+
+.btn-sm {
+    padding: 7px 12px;
+    font-size: 13px;
+}
+
+/* Selector de estado dentro de la tabla de ambulancias */
+.estado-select {
+    width: auto;
+    min-width: 150px;
+    padding: 6px 10px;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* ---------- Alertas ---------- */
+.alert {
+    display: none;
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+}
+
+.alert.show {
+    display: block;
+}
+
+.alert-success {
+    color: #22543d;
+    background: #c6f6d5;
+    border-color: #9ae6b4;
+}
+
+.alert-error {
+    color: #742a2a;
+    background: #fed7d7;
+    border-color: #feb2b2;
+}
+
+.alert-info {
+    color: #1a365d;
+    background: #e2e8f0;
+    border-color: #cbd5e0;
+}
+
+.alert-warning {
+    color: #744210;
+    background: #fefcbf;
+    border-color: #faf089;
+}
+
+/* ---------- Tablas ---------- */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.empty {
+    text-align: center;
+    color: #666;
+}
+
+/* ---------- Badges ---------- */
+.badge {
+    display: inline-block;
+    padding: 4px 9px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.badge-success { color: #22543d; background: #c6f6d5; }
+.badge-warning { color: #744210; background: #fefcbf; }
+.badge-danger  { color: #742a2a; background: #fed7d7; }
+.badge-info    { color: #1a365d; background: #e2e8f0; }
+
+/* ---------- Enlaces de autenticación ---------- */
+.auth-links {
+    margin-top: 18px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* ---------- Mapa ---------- */
+#map {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+    border-radius: 6px;
+    z-index: 1;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.row-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pin-status {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+/* ---------- QR ---------- */
+.qr-section {
+    padding-top: 20px;
+    margin-top: 22px;
+    text-align: center;
+    border-top: 1px dashed #cbd5e0;
+}
+
+.qr-box {
+    display: inline-block;
+    padding: 14px;
+    background: #ffffff;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+}
+
+.qr-box img {
+    display: block;
+    margin: 0 auto;
+    width: 140px;
+    height: 140px;
+}
+
+.qr-box p {
+    margin-top: 8px;
+    color: #666;
+    font-size: 12px;
+}
+
+/* ---------- Footer ---------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* ---------- Utilidades ---------- */
+.text-muted { color: #666; }
+.text-center { text-align: center; }
+.mt-0 { margin-top: 0; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-0 { margin-bottom: 0; }
+.w-100 { width: 100%; }
+.nowrap { white-space: nowrap; }
+.small { font-size: 13px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+    .navbar {
+        padding: 12px 16px;
+    }
+
+    .navbar-links {
+        width: 100%;
+    }
+
+    .navbar-links a {
+        margin-left: 0;
+        margin-right: 15px;
+    }
+
+    .navbar-user {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .page {
+        padding: 0 12px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .card,
+    .page-header {
+        padding: 22px 20px;
+    }
+
+    .container {
+        margin: 20px 12px;
+        padding: 22px 20px;
+    }
+}

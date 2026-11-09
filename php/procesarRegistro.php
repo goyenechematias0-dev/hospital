@@ -1,39 +1,42 @@
 <?php
-// Conexión a la base de datos (ajustá los datos según tu entorno XAMPP)
-$servidor = "localhost";
-$usuario = "root";
-$clave = "";
-$baseDatos = "hospital_clinicas"; // Nombre de tu base de datos del proyecto
+/**
+ * Endpoint de compatibilidad para los formularios antiguos de registro.
+ * Inserta en la tabla `usuario` y redirige al login.
+ */
+require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/helpers.php';
 
-$conexion = new mysqli($servidor, $usuario, $clave, $baseDatos);
+$nombre   = campo($_POST, 'nombre');
+$apellido = campo($_POST, 'apellido');
+$cedula   = campo($_POST, 'cedula');
+$email    = campo($_POST, 'email');
+$password = (string) ($_POST['password'] ?? '');
+$rol      = campo($_POST, 'rol', 'paciente');
 
-// Verificar conexión
-if ($conexion->connect_error) {
-    die("Error de conexión a la base de datos: " . $conexion->connect_error);
+$rolesValidos = ['administrador', 'medico', 'chofer', 'copiloto', 'paciente'];
+if (!in_array($rol, $rolesValidos, true)) {
+    $rol = 'paciente';
 }
 
-// Recoger los datos enviados desde el formulario HTML
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $conexion->real_escape_string($_POST['nombre']);
-    $cedula = $conexion->real_escape_string($_POST['cedula']);
-    $email = $conexion->real_escape_string($_POST['email']);
-    $passwordPlana = $_POST['password'];
-
-    // Encriptar la contraseña por seguridad (recomendado para proyectos de IT)
-    $passwordEncriptada = password_hash($passwordPlana, PASSWORD_DEFAULT);
-
-    // Consulta SQL para insertar el nuevo funcionario (asumiendo que tu tabla se llama 'funcionarios')
-    $sql = "INSERT INTO funcionarios (nombre, cedula, email, password) VALUES ('$nombre', '$cedula', '$email', '$passwordEncriptada')";
-
-    if ($conexion->query($sql) === TRUE) {
-        echo "<script>
-                alert('¡Funcionario registrado con éxito!');
-                window.location.href = 'login.html';
-              </script>";
-    } else {
-        echo "Error al registrar: " . $sql . "<br>" . $conexion->error;
-    }
+if ($nombre === '' || $apellido === '' || $cedula === '' || $email === '' || $password === '') {
+    echo "<script>alert('Complete todos los campos.'); history.back();</script>";
+    exit;
 }
 
-$conexion->close();
-?>
+try {
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    $stmt = $conn->prepare(
+        'INSERT INTO usuario (cedula, nombre, apellido, email, password, rol)
+         VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    $stmt->bind_param('ssssss', $cedula, $nombre, $apellido, $email, $hash, $rol);
+    $stmt->execute();
+    $stmt->close();
+
+    echo "<script>
+            alert('¡Usuario registrado con éxito!');
+            window.location.href = '../index.html';
+          </script>";
+} catch (Throwable $e) {
+    echo "<script>alert('Error al registrar: " . addslashes($e->getMessage()) . "'); history.back();</script>";
+}

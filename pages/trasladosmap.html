@@ -1,383 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Gestión de Traslados y Ambulancias</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- Leaflet Routing Machine CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f6f9;
-        }
-        .navbar {
-            background-color: #1a365d;
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .navbar-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 14px;
-            font-weight: normal;
-        }
-        .navbar-links a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #1a365d;
-            margin-top: 0;
-            font-size: 22px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 10px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #2d3748;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            box-sizing: border-box;
-            font-size: 14px;
-            border: 1px solid #cbd5e0;
-            border-radius: 4px;
-        }
-        .btn-primary {
-            background-color: #1a365d;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-primary:hover {
-            background-color: #2c5282;
-        }
-        .btn-success {
-            background-color: #2e8b57;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-        .btn-success:hover {
-            background-color: #246b43;
-        }
-        .controls {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .row-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        #map {
-            height: 450px;
-            width: 100%;
-            border-radius: 6px;
-            margin-top: 20px;
-            z-index: 1;
-        }
-        #pinStatus {
-            background: #e2e8f0;
-            padding: 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #1a365d;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de unidades | S.I.G.S.M.</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
+  <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-
-    <!-- Barra de navegación superior -->
-    <div class="navbar">
-        <span>Gestión de Traslados y Ambulancias</span>
-        <div class="navbar-links">
-            <a href="index.html">Inicio</a> | 
-            <a href="trasladosmap.html">Traslados</a> | 
-            <a href="documentos.html">Documentos</a> | 
-            <a href="login.html">Cerrar Sesión</a>
-        </div>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-badge">🏥</div>
+      <span>Hospital de Clínicas</span>
     </div>
 
-    <div class="container">
-        <!-- Formulario: Solicitar Nuevo Traslado -->
-        <h2>Solicitar Nuevo Traslado</h2>
-        <form action="../php/guardarTraslados.php" method="POST">
-            <div class="form-group">
-                <label for="origen">Origen:</label>
-                <input type="text" id="origen" name="origen" required>
-            </div>
-            <div class="form-group">
-                <label for="destino">Destino:</label>
-                <input type="text" id="destino" name="destino" required>
-            </div>
-            <div class="form-group">
-                <label for="acompanante">Acompañante:</label>
-                <input type="text" id="acompanante" name="acompanante">
-            </div>
-            <div class="form-group">
-                <label for="ambulancia">Asignar Ambulancia:</label>
-                <select id="ambulancia" name="ambulancia" required>
-                    <option value="">Seleccione una ambulancia...</option>
-                    <option value="AMB-001">Ambulancia AMB-001</option>
-                    <option value="AMB-002">Ambulancia AMB-002</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-primary">Registrar Traslado</button>
-        </form>
+    <nav class="navbar-links">
+      <a href="menu.html">Inicio</a>
+      <a href="traslados.html">Traslados</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="encuestas.html">Encuestas</a>
+    </nav>
 
-        <!-- Formulario: Gestión de Flota de Ambulancias -->
-        <h2 style="margin-top: 40px;">Gestión de Flota de Ambulancias</h2>
-        <form action="../php/RegistroDeAmbulancia.php" method="POST">
-            <div class="form-group">
-                <label for="matricula">Matrícula:</label>
-                <input type="text" id="matricula" name="matricula" placeholder="Ej: SAB-1234" required>
-            </div>
-            <button type="submit" class="btn-primary">Registrar Ambulancia</button>
-        </form>
-
-        <!-- Sección de Monitoreo con el Mapa Leaflet y Animación -->
-        <h2 style="margin-top: 40px;">Monitoreo de Rutas y Unidades</h2>
-        <div class="controls">
-            <select id="departamento">
-                <option value="Montevideo">Montevideo</option>
-            </select>
-
-            <label for="direccion" style="font-weight: bold; color: #2d3748;">Ingresar dirección de destino (Montevideo):</label>
-            <input type="text" id="direccion" placeholder="Ej: 18 de Julio 1200, Montevideo">
-
-            <button type="button" id="generatePinBtn" class="btn-primary" style="background-color: #1d3557;">Generar Pin y Ruta</button>
-            <button type="button" id="animarAmbulanciaBtn" class="btn-success" style="display: none;">🚨 Iniciar Recorrido de Ambulancia</button>
-            
-            <div class="row-buttons" style="margin-top: 5px;">
-                <button type="button" id="crearUnidadBtn" class="btn-primary" style="flex: 1;">+ Crear Unidad</button>
-                <button type="button" id="eliminarUnidadBtn" class="btn-primary" style="flex: 1; background-color: #dc3545;">- Eliminar Unidad</button>
-            </div>
+    <div class="navbar-user">
+      <div class="user-chip">
+        <div class="user-avatar" data-user-initial>U</div>
+        <div>
+          <span data-user-name>Usuario</span>
+          <small data-user-role>rol</small>
         </div>
+      </div>
+      <a href="login.html" class="btn btn-sm btn-secondary" data-logout>Cerrar sesión</a>
+    </div>
+  </header>
 
-        <div id="pinStatus">Estado de la ruta: Esperando dirección de destino...</div>
-
-        <!-- Contenedor del Mapa -->
-        <div id="map"></div>
+  <main class="page">
+    <div class="page-header">
+      <h1>Monitoreo de rutas y unidades</h1>
+      <p>Generá una ruta desde el Hospital de Clínicas y simulá el recorrido de una ambulancia.</p>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <!-- Leaflet Routing Machine JS -->
-    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    
-    <!-- Script completo con animación de la ambulancia -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var clinicasLat = -34.8936;
-            var clinicasLng = -56.1475;
+    <section class="card">
+      <div class="controls">
+        <div class="form-group">
+          <label for="departamento">Departamento</label>
+          <select class="form-control" id="departamento">
+            <option value="Artigas">Artigas</option>
+            <option value="Canelones">Canelones</option>
+            <option value="Cerro Largo">Cerro Largo</option>
+            <option value="Colonia">Colonia</option>
+            <option value="Durazno">Durazno</option>
+            <option value="Flores">Flores</option>
+            <option value="Florida">Florida</option>
+            <option value="Lavalleja">Lavalleja</option>
+            <option value="Maldonado">Maldonado</option>
+            <option value="Montevideo" selected>Montevideo</option>
+            <option value="Paysandú">Paysandú</option>
+            <option value="Río Negro">Río Negro</option>
+            <option value="Rivera">Rivera</option>
+            <option value="Rocha">Rocha</option>
+            <option value="Salto">Salto</option>
+            <option value="San José">San José</option>
+            <option value="Soriano">Soriano</option>
+            <option value="Tacuarembó">Tacuarembó</option>
+            <option value="Treinta y Tres">Treinta y Tres</option>
+          </select>
+        </div>
 
-            var map = L.map('map').setView([clinicasLat, clinicasLng], 14);
+        <div class="form-group">
+          <label for="direccion">Dirección de destino</label>
+          <input class="form-control" type="text" id="direccion"
+                 placeholder="Ej: 18 de Julio 1200, Montevideo">
+        </div>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
+        <div class="row-buttons">
+          <button type="button" id="generatePinBtn" class="btn">Generar pin y ruta</button>
+          <button type="button" id="animarAmbulanciaBtn" class="btn btn-secondary" style="display:none;">
+            🚨 Iniciar recorrido
+          </button>
+          <button type="button" id="crearUnidadBtn" class="btn btn-secondary">+ Crear unidad</button>
+          <button type="button" id="eliminarUnidadBtn" class="btn btn-danger">− Eliminar unidad</button>
+          <a href="traslados.html" class="btn btn-secondary">Volver a traslados</a>
+        </div>
+      </div>
 
-            setTimeout(function() {
-                map.invalidateSize();
-            }, 300);
+      <div id="pinStatus" class="pin-status">Estado de la ruta: esperando dirección de destino...</div>
 
-            var iconoAmbulancia = L.divIcon({
-                className: 'custom-ambulance-icon',
-                html: '<div style="font-size: 24px; background: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); border: 2px solid #1a365d;">🚑</div>',
-                iconSize: [35, 35],
-                iconAnchor: [17, 17]
-            });
+      <div id="map"></div>
+    </section>
+  </main>
 
-            // Base Central Hospital de Clínicas
-            L.marker([clinicasLat, clinicasLng], {icon: iconoAmbulancia}).addTo(map)
-                .bindPopup("<b>Hospital de Clínicas</b><br>Base Central S.I.G.S.M.").openPopup();
+  <footer class="footer">© 2026 MBM Médica — Todos los derechos reservados.</footer>
 
-            var arrayAmbulancias = [];
-            var controlRuta = null;
-            var coordenadasRutaActual = [];
-            var marcadorEnMovimiento = null;
-
-            // Botón Crear Unidad
-            var btnCrear = document.getElementById('crearUnidadBtn');
-            if (btnCrear) {
-                btnCrear.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var lat = clinicasLat + (Math.random() - 0.5) * 0.02;
-                    var lng = clinicasLng + (Math.random() - 0.5) * 0.02;
-
-                    var idUnidad = arrayAmbulancias.length + 1;
-                    var marker = L.marker([lat, lng], {icon: iconoAmbulancia}).addTo(map)
-                        .bindPopup("<b>Ambulancia Activa #" + idUnidad + "</b><br>Salida: Hospital de Clínicas");
-
-                    arrayAmbulancias.push(marker);
-                });
-            }
-
-            // Botón Eliminar Unidad
-            var btnEliminar = document.getElementById('eliminarUnidadBtn');
-            if (btnEliminar) {
-                btnEliminar.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (arrayAmbulancias.length > 0) {
-                        var unidadBorrada = arrayAmbulancias.pop();
-                        map.removeLayer(unidadBorrada);
-                    }
-                });
-            }
-
-            // Botón Generar Pin y Ruta
-            var btnRuta = document.getElementById('generatePinBtn');
-            var btnAnimar = document.getElementById('animarAmbulanciaBtn');
-            var inputDireccion = document.getElementById('direccion');
-            var statusDiv = document.getElementById('pinStatus');
-
-            if (btnRuta) {
-                btnRuta.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    var direccionTexto = inputDireccion.value.trim();
-
-                    if (!direccionTexto) {
-                        alert("Por favor, ingresa una dirección de destino válida.");
-                        return;
-                    }
-
-                    statusDiv.innerHTML = "Buscando dirección y calculando ruta calle por calle...";
-                    btnAnimar.style.display = "none";
-
-                    var queryURL = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(direccionTexto + ", Montevideo, Uruguay");
-
-                    fetch(queryURL)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data && data.length > 0) {
-                                var destLat = parseFloat(data[0].lat);
-                                var destLng = parseFloat(data[0].lon);
-
-                                if (controlRuta) {
-                                    map.removeControl(controlRuta);
-                                }
-                                if (marcadorEnMovimiento) {
-                                    map.removeLayer(marcadorEnMovimiento);
-                                }
-
-                                controlRuta = L.Routing.control({
-                                    waypoints: [
-                                        L.latLng(clinicasLat, clinicasLng),
-                                        L.latLng(destLat, destLng)
-                                    ],
-                                    routeWhileDragging: false,
-                                    language: 'es',
-                                    showAlternatives: false,
-                                    fitSelectedRoutes: true,
-                                    createMarker: function(i, wp) {
-                                        if (i === 0) {
-                                            return L.marker(wp.latLng, {icon: iconoAmbulancia}).bindPopup("Salida: Hospital de Clínicas");
-                                        } else {
-                                            return L.marker(wp.latLng).bindPopup("Destino: " + direccionTexto);
-                                        }
-                                    }
-                                }).addTo(map);
-
-                                controlRuta.on('routesfound', function(e) {
-                                    var routes = e.routes;
-                                    var summary = routes[0].summary;
-                                    var distanciaKm = (summary.totalDistance / 1000).toFixed(2);
-                                    var tiempoMin = Math.round(summary.totalTime / 60);
-
-                                    // Guardamos las coordenadas de las calles por donde pasará la ambulancia
-                                    coordenadasRutaActual = routes[0].coordinates;
-
-                                    statusDiv.innerHTML = "✅ Ruta lista | Distancia: <b>" + distanciaKm + " km</b> | Tiempo: <b>" + tiempoMin + " min</b>. ¡Ya puedes iniciar el recorrido!";
-                                    btnAnimar.style.display = "block"; // Mostrar el botón de mover ambulancia
-                                });
-
-                            } else {
-                                statusDiv.innerHTML = "❌ No se encontró la dirección en Montevideo. Intenta con otra.";
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            statusDiv.innerHTML = "⚠️ Error al conectar con el servicio de mapas.";
-                        });
-                });
-            }
-
-            // Función para animar la ambulancia calle por calle
-            if (btnAnimar) {
-                btnAnimar.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (coordenadasRutaActual.length === 0) return;
-
-                    btnAnimar.disabled = true;
-                    statusDiv.innerHTML = "🚑 Ambulancia en camino hacia el destino...";
-
-                    // Crear el marcador móvil de la ambulancia en el punto de partida
-                    if (marcadorEnMovimiento) {
-                        map.removeLayer(marcadorEnMovimiento);
-                    }
-                    marcadorEnMovimiento = L.marker([clinicasLat, clinicasLng], {icon: iconoAmbulancia}).addTo(map)
-                        .bindPopup("<b>Unidad en Emergencia</b><br>En movimiento hacia el destino").openPopup();
-
-                    var index = 0;
-                    function moverPaso() {
-                        if (index < coordenadasRutaActual.length) {
-                            var punto = coordenadasRutaActual[index];
-                            marcadorEnMovimiento.setLatLng([punto.lat, punto.lng]);
-                            index++;
-                            setTimeout(moverPaso, 40); // Velocidad de animación de los pasos
-                        } else {
-                            statusDiv.innerHTML = "🏁 ¡La ambulancia ha llegado al destino con éxito!";
-                            btnAnimar.disabled = false;
-                            marcadorEnMovimiento.bindPopup("<b>Unidad Llegada al Destino</b><br>Servicio completado").openPopup();
-                        }
-                    }
-
-                    moverPaso();
-                });
-            }
-        });
-    </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/trasladosmap.js"></script>
 </body>
 </html>

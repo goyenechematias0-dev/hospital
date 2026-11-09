@@ -1,182 +1,171 @@
-// =========================================================
-// S.I.G.S.M. - MONITOREO DE TRASLADOS Y MAPA INTERACTIVO
-// =========================================================
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof L === 'undefined') {
+    return;
+  }
 
-const defaultLat = -34.8912019;
-const defaultLng = -56.1518127;
+  var clinicasLat = -34.8936;
+  var clinicasLng = -56.1475;
 
-// Inicializar el mapa centrado en el Hospital de Clínicas
-const map = L.map('map').setView([defaultLat, defaultLng], 15);
+  var map = L.map('map').setView([clinicasLat, clinicasLng], 14);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
+  }).addTo(map);
 
-// Lista para almacenar los marcadores creados en el mapa
-let listaMarcadores = [];
+  setTimeout(function () { map.invalidateSize(); }, 300);
 
-// =========================================================
-// ICONO VECTORIAL DE AMBULANCIA (SEGURO Y VISIBLE)
-// =========================================================
-const iconoAmbulanciaPersonalizado = L.divIcon({
-    className: 'custom-ambulance-marker',
-    html: `
-        <div style="
-            background-color: #0056b3; 
-            color: white; 
-            width: 42px; 
-            height: 42px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 20px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-            border: 2px solid white;
-        ">🚑</div>
-    `,
-    iconSize: [42, 42],
-    iconAnchor: [21, 21],
-    popupAnchor: [0, -21]
-});
+  var iconoAmbulancia = L.divIcon({
+    className: 'custom-ambulance-icon',
+    html: '<div style="font-size:24px;background:#fff;border-radius:50%;width:35px;height:35px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.3);border:2px solid #1a365d;">🚑</div>',
+    iconSize: [35, 35],
+    iconAnchor: [17, 17]
+  });
 
-// Función para asociar un popup simple con información de la unidad
-function configurarPopupAmbulancia(marcador, textoLugar, idUnidad) {
-    const contenidoPopup = `
-        <div style="font-family: Arial; padding: 5px; min-width: 160px; text-align: center;">
-            <h4 style="margin: 0 0 5px 0; color: #0056b3;">Unidad: ${idUnidad}</h4>
-            <p style="margin: 4px 0; font-size: 13px;"><b>Ubicación:</b><br>${textoLugar}</p>
-        </div>
-    `;
-    marcador.bindPopup(contenidoPopup);
-}
+  L.marker([clinicasLat, clinicasLng], { icon: iconoAmbulancia }).addTo(map)
+    .bindPopup('<b>Hospital de Clínicas</b><br>Base Central S.I.G.S.M.')
+    .openPopup();
 
-// Crear el marcador inicial del Hospital de Clínicas
-let markerPrincipal = L.marker([defaultLat, defaultLng], { icon: iconoAmbulanciaPersonalizado }).addTo(map);
-configurarPopupAmbulancia(markerPrincipal, "Hospital de Clínicas, Montevideo", "AMB-001");
-listaMarcadores.push({ id: "AMB-001", marker: markerPrincipal });
+  var arrayAmbulancias = [];
+  var controlRuta = null;
+  var coordenadasRutaActual = [];
+  var marcadorEnMovimiento = null;
 
-// =========================================================
-// FUNCIONALIDAD DEL BOTÓN "+ Crear Unidad"
-// =========================================================
-const btnCrearUnidad = document.getElementById('crearUnidadBtn');
-if (btnCrearUnidad) {
-    btnCrearUnidad.addEventListener('click', () => {
-        let idAmbulancia = prompt("Ingrese el identificador de la nueva unidad (Ej: AMB-002):");
-        if (idAmbulancia && idAmbulancia.trim() !== "") {
-            let latRand = defaultLat + (Math.random() - 0.5) * 0.02;
-            let lngRand = defaultLng + (Math.random() - 0.5) * 0.02;
-
-            let nuevoMarcador = L.marker([latRand, lngRand], { icon: iconoAmbulanciaPersonalizado }).addTo(map);
-            configurarPopupAmbulancia(nuevoMarcador, "Unidad en Operación Activa", idAmbulancia.trim());
-            nuevoMarcador.openPopup();
-
-            listaMarcadores.push({ id: idAmbulancia.trim(), marker: nuevoMarcador });
-            alert("¡Unidad " + idAmbulancia.trim() + " creada con éxito!");
-        }
+  var btnCrear = document.getElementById('crearUnidadBtn');
+  if (btnCrear) {
+    btnCrear.addEventListener('click', function (e) {
+      e.preventDefault();
+      var lat = clinicasLat + (Math.random() - 0.5) * 0.02;
+      var lng = clinicasLng + (Math.random() - 0.5) * 0.02;
+      var idUnidad = arrayAmbulancias.length + 1;
+      var marker = L.marker([lat, lng], { icon: iconoAmbulancia }).addTo(map)
+        .bindPopup('<b>Ambulancia activa #' + idUnidad + '</b><br>Salida: Hospital de Clínicas');
+      arrayAmbulancias.push(marker);
     });
-}
+  }
 
-// =========================================================
-// FUNCIONALIDAD DEL BOTÓN "- Eliminar Unidad"
-// =========================================================
-const btnEliminarUnidad = document.getElementById('eliminarUnidadBtn');
-if (btnEliminarUnidad) {
-    btnEliminarUnidad.addEventListener('click', () => {
-        if (listaMarcadores.length <= 1) {
-            alert("Debe mantener al menos una unidad activa en el mapa.");
+  var btnEliminar = document.getElementById('eliminarUnidadBtn');
+  if (btnEliminar) {
+    btnEliminar.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (arrayAmbulancias.length > 0) {
+        map.removeLayer(arrayAmbulancias.pop());
+      }
+    });
+  }
+
+  var btnRuta = document.getElementById('generatePinBtn');
+  var btnAnimar = document.getElementById('animarAmbulanciaBtn');
+  var inputDireccion = document.getElementById('direccion');
+  var selectDepartamento = document.getElementById('departamento');
+  var statusDiv = document.getElementById('pinStatus');
+
+  if (selectDepartamento && inputDireccion) {
+    var actualizarPlaceholder = function () {
+      inputDireccion.placeholder = 'Ej: 18 de Julio 1200, ' + selectDepartamento.value;
+    };
+    selectDepartamento.addEventListener('change', actualizarPlaceholder);
+    actualizarPlaceholder();
+  }
+
+  if (btnRuta) {
+    btnRuta.addEventListener('click', function (e) {
+      e.preventDefault();
+      var direccionTexto = inputDireccion.value.trim();
+
+      if (!direccionTexto) {
+        alert('Por favor, ingresá una dirección de destino válida.');
+        return;
+      }
+
+      var departamento = selectDepartamento ? selectDepartamento.value : 'Montevideo';
+
+      statusDiv.innerHTML = 'Buscando dirección en ' + departamento + ' y calculando ruta...';
+      btnAnimar.style.display = 'none';
+
+      var queryURL = 'https://nominatim.openstreetmap.org/search?format=json&q=' +
+        encodeURIComponent(direccionTexto + ', ' + departamento + ', Uruguay');
+
+      fetch(queryURL)
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+          if (!data || data.length === 0) {
+            statusDiv.innerHTML = '❌ No se encontró la dirección. Intentá con otra.';
             return;
-        }
-        let idAEliminar = prompt("Ingrese el identificador de la unidad a eliminar (Ej: AMB-002):");
-        if (idAEliminar) {
-            let index = listaMarcadores.findIndex(item => item.id.toUpperCase() === idAEliminar.trim().toUpperCase());
-            if (index !== -1) {
-                map.removeLayer(listaMarcadores[index].marker);
-                listaMarcadores.splice(index, 1);
-                alert("Unidad " + idAEliminar + " eliminada del mapa.");
-            } else {
-                alert("No se encontró ninguna unidad con ese identificador.");
+          }
+
+          var destLat = parseFloat(data[0].lat);
+          var destLng = parseFloat(data[0].lon);
+
+          if (controlRuta) map.removeControl(controlRuta);
+          if (marcadorEnMovimiento) map.removeLayer(marcadorEnMovimiento);
+
+          controlRuta = L.Routing.control({
+            waypoints: [
+              L.latLng(clinicasLat, clinicasLng),
+              L.latLng(destLat, destLng)
+            ],
+            routeWhileDragging: false,
+            language: 'es',
+            showAlternatives: false,
+            fitSelectedRoutes: true,
+            createMarker: function (i, wp) {
+              if (i === 0) {
+                return L.marker(wp.latLng, { icon: iconoAmbulancia }).bindPopup('Salida: Hospital de Clínicas');
+              }
+              return L.marker(wp.latLng).bindPopup('Destino: ' + direccionTexto + ' (' + departamento + ')');
             }
-        }
+          }).addTo(map);
+
+          controlRuta.on('routesfound', function (ev) {
+            var summary = ev.routes[0].summary;
+            var distanciaKm = (summary.totalDistance / 1000).toFixed(2);
+            var tiempoMin = Math.round(summary.totalTime / 60);
+            coordenadasRutaActual = ev.routes[0].coordinates;
+
+            statusDiv.innerHTML = '✅ Ruta lista | Distancia: <b>' + distanciaKm +
+              ' km</b> | Tiempo: <b>' + tiempoMin + ' min</b>. ¡Ya podés iniciar el recorrido!';
+            btnAnimar.style.display = 'block';
+          });
+        })
+        .catch(function (err) {
+          console.error(err);
+          statusDiv.innerHTML = '⚠️ Error al conectar con el servicio de mapas.';
+        });
     });
-}
+  }
 
-// =========================================================
-// VINCULACIÓN Y FUNCIONALIDAD DE LOS CONTROLES SUPERIORES Y PHP
-// =========================================================
-const generatePinBtn = document.getElementById('generatePinBtn');
-const pinStatus = document.getElementById('pinStatus');
+  if (btnAnimar) {
+    btnAnimar.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (coordenadasRutaActual.length === 0) return;
 
-if (generatePinBtn) {
-    generatePinBtn.addEventListener('click', async () => {
-        const inputDireccion = document.getElementById('direccion').value.trim();
-        const selectDepto = document.getElementById('departamento').value;
+      btnAnimar.disabled = true;
+      statusDiv.innerHTML = '🚑 Ambulancia en camino hacia el destino...';
 
-        let queryBusqueda = "";
-        if (inputDireccion && selectDepto) {
-            queryBusqueda = `${inputDireccion}, ${selectDepto}, Uruguay`;
-        } else if (inputDireccion) {
-            queryBusqueda = `${inputDireccion}, Montevideo, Uruguay`;
-        } else if (selectDepto) {
-            queryBusqueda = `${selectDepto}, Uruguay`;
+      if (marcadorEnMovimiento) map.removeLayer(marcadorEnMovimiento);
+
+      marcadorEnMovimiento = L.marker([clinicasLat, clinicasLng], { icon: iconoAmbulancia })
+        .addTo(map)
+        .bindPopup('<b>Unidad en emergencia</b><br>En movimiento hacia el destino')
+        .openPopup();
+
+      var index = 0;
+
+      function moverPaso() {
+        if (index < coordenadasRutaActual.length) {
+          var punto = coordenadasRutaActual[index];
+          marcadorEnMovimiento.setLatLng([punto.lat, punto.lng]);
+          index++;
+          setTimeout(moverPaso, 40);
         } else {
-            alert("Por favor ingrese una dirección o seleccione un departamento.");
-            return;
+          statusDiv.innerHTML = '🏁 ¡La ambulancia llegó al destino con éxito!';
+          btnAnimar.disabled = false;
+          marcadorEnMovimiento.bindPopup('<b>Unidad llegada al destino</b><br>Servicio completado').openPopup();
         }
+      }
 
-        if (pinStatus) {
-            pinStatus.innerHTML = "🔍 Buscando ubicación...";
-        }
-
-        try {
-            const respuesta = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(queryBusqueda)}`);
-            const datos = await respuesta.json();
-
-            if (datos && datos.length > 0) {
-                const nuevaLat = parseFloat(datos[0].lat);
-                const nuevaLng = parseFloat(datos[0].lon);
-                const nombreLugar = datos[0].display_name;
-
-                map.setView([nuevaLat, nuevaLng], 16);
-                markerPrincipal.setLatLng([nuevaLat, nuevaLng]);
-                
-                const idTrasladoNuevo = "TRASLADO-" + Math.floor(1000 + Math.random() * 9000);
-                configurarPopupAmbulancia(markerPrincipal, nombreLugar, idTrasladoNuevo);
-                markerPrincipal.openPopup();
-
-                if (pinStatus) {
-                    pinStatus.innerHTML = `✅ Pin generado con éxito para: <b>${queryBusqueda}</b>`;
-                }
-
-                // Envío automático al backend PHP
-                let formData = new FormData();
-                formData.append('origen', 'Hospital de Clínicas, Montevideo');
-                formData.append('destino', queryBusqueda);
-                formData.append('acompanante', 'Personal médico');
-
-                fetch('../php/guardarTraslados.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Respuesta de la BD:", data.mensaje);
-                })
-                .catch(error => {
-                    console.error("Error al registrar en PHP:", error);
-                });
-
-            } else {
-                if (pinStatus) {
-                    pinStatus.innerHTML = `⚠️ No se encontró una ubicación exacta para "${queryBusqueda}".`;
-                }
-            }
-        } catch (error) {
-            console.error("Error al buscar la dirección:", error);
-            if (pinStatus) {
-                pinStatus.innerHTML = `❌ Error al conectar con el servicio de mapas.`;
-            }
-        }
+      moverPaso();
     });
-}
+  }
+});

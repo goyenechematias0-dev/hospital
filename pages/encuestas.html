@@ -1,50 +1,123 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encuestas y Consultas - MBM Médica</title>
-    <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encuestas de satisfacción | S.I.G.S.M.</title>
+  <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-    <header>
-        <h2>Encuestas y Consultas</h2>
-        <nav>
-            <a href="../index.html">Inicio</a> |
-            <a href="traslados.html">Traslados</a> |
-            <a href="documentos.html">Documentos</a> |
-            <a href="encuestas.html">Encuestas</a> |
-            <a href="login.html">Cerrar Sesión</a>
-        </nav>
-    </header>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-badge">🏥</div>
+      <span>Hospital de Clínicas</span>
+    </div>
 
-    <main class="form-container">
-        <h2>Encuesta de Satisfacción del Paciente</h2>
-        <form id="form-encuestas" action="../php/guardar_encuesta.php" method="POST">
-            
-            <label for="titulo">Asunto / Título:</label><br>
-            <input type="text" id="titulo" name="titulo" placeholder="Ej: Atención en traslado" required style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;"><br><br>
+    <nav class="navbar-links">
+      <a href="menu.html">Inicio</a>
+      <a href="traslados.html">Traslados</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="encuestas.html" class="active">Encuestas</a>
+    </nav>
 
-            <label for="calificacion">¿Cómo califica la atención recibida?</label><br>
-            <select id="calificacion" name="calificacion" required style="width: 100%; padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;">
-                <option value="">Seleccione una opción...</option>
-                <option value="Excelente">Excelente</option>
-                <option value="Buena">Buena</option>
-                <option value="Regular">Regular</option>
-                <option value="Mala">Mala</option>
-            </select><br><br>
+    <div class="navbar-user">
+      <div class="user-chip">
+        <div class="user-avatar" data-user-initial>U</div>
+        <div>
+          <span data-user-name>Usuario</span>
+          <small data-user-role>rol</small>
+        </div>
+      </div>
+      <a href="login.html" class="btn btn-sm btn-secondary" data-logout>Cerrar sesión</a>
+    </div>
+  </header>
 
-            <label for="comentarios">Comentarios u observaciones:</label><br>
-            <textarea id="comentarios" name="comentarios" rows="4" style="width: 100%; border-radius: 4px; border: 1px solid #ccc;"></textarea><br><br>
+  <main class="page">
+    <div class="page-header">
+      <h1>Encuestas de satisfacción</h1>
+      <p>Registrá la opinión de los pacientes y consultá las últimas respuestas.</p>
+    </div>
 
-            <button type="submit" class="btn-submit">Enviar Encuesta</button>
+    <div class="grid-2">
+      <section class="card">
+        <h2>Nueva encuesta</h2>
+        <div id="alert-encuesta" class="alert"></div>
+
+        <form id="form-encuesta">
+          <div class="form-group">
+            <label for="titulo-encuesta">Asunto / título *</label>
+            <input class="form-control" type="text" id="titulo-encuesta" name="titulo"
+                   placeholder="Ej: Atención en traslado" required>
+          </div>
+
+          <div class="form-group">
+            <label for="calificacion">¿Cómo califica la atención recibida? *</label>
+            <select class="form-control" id="calificacion" name="calificacion" required>
+              <option value="">Seleccione una opción...</option>
+              <option value="Excelente">Excelente</option>
+              <option value="Buena">Buena</option>
+              <option value="Regular">Regular</option>
+              <option value="Mala">Mala</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="comentarios">Comentarios u observaciones</label>
+            <textarea class="form-control" id="comentarios" name="comentarios"
+                      placeholder="Contanos tu experiencia"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Enviar encuesta</button>
+          </div>
         </form>
-    </main>
+      </section>
 
-    <footer style="text-align: center; margin-top: 20px;">
-        <p>&copy; 2026 MBM Médica - Todos los derechos reservados.</p>
-    </footer>
+      <section class="card">
+        <h2>¿Para qué sirve?</h2>
+        <p class="text-muted small">
+          Las encuestas permiten medir la calidad del servicio de traslados y de la atención
+          hospitalaria. Cada respuesta queda guardada en MySQL con su calificación,
+          comentario, fecha y usuario.
+        </p>
 
-    <script src="../js/encuestas.js"></script>
+        <div class="mt-16">
+          <span class="badge badge-success">Excelente</span>
+          <span class="badge badge-info">Buena</span>
+          <span class="badge badge-warning">Regular</span>
+          <span class="badge badge-danger">Mala</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="card mt-24">
+      <div class="section-head">
+        <h2>Últimas encuestas</h2>
+        <button type="button" class="btn btn-sm btn-secondary" id="btn-refrescar-encuestas">Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Título</th>
+              <th>Calificación</th>
+              <th>Comentarios</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-encuestas">
+            <tr><td colspan="6" class="empty">Cargando encuestas…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 MBM Médica — Todos los derechos reservados.</footer>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/encuestas.js"></script>
 </body>
 </html>

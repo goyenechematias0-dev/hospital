@@ -1,61 +1,62 @@
 <?php
-header('Content-Type: application/json');
-include 'conexion.php';
+require_once __DIR__ . '/conexion.php';
+require_once __DIR__ . '/helpers.php';
 
-// Leer el JSON recibido desde el fetch
-$input = file_get_contents('php://input');
-$datos = json_decode($input, true);
+$data = request_data();
 
-if (!$datos) {
-    echo json_encode(['exito' => false, 'mensaje' => 'Datos no válidos.']);
-    exit;
+$nombre   = campo($data, 'nombre');
+$apellido = campo($data, 'apellido');
+$cedula   = campo($data, 'cedula');
+$email    = campo($data, 'email');
+$password = (string) ($data['password'] ?? '');
+$rol      = campo($data, 'rol', 'paciente');
+$telefono = campo($data, 'telefono');
+
+$rolesValidos = ['administrador', 'medico', 'chofer', 'copiloto', 'paciente'];
+if (!in_array($rol, $rolesValidos, true)) {
+    $rol = 'paciente';
 }
 
-$nombre = trim($datos['nombre'] ?? '');
-$email = trim($datos['email'] ?? '');
-$password = trim($datos['password'] ?? '');
-$rol = trim($datos['rol'] ?? '');
-
-if (empty($nombre) || empty($email) || empty($password) || empty($rol)) {
-    echo json_encode(['exito' => false, 'mensaje' => 'Todos los campos son obligatorios.']);
-    exit;
+if ($nombre === '' || $apellido === '' || $cedula === '' || $email === '' || $password === '') {
+    json_response(['exito' => false, 'mensaje' => 'Complete todos los campos obligatorios.'], 422);
 }
 
-// Encriptar la contraseña de forma segura
-$passwordHash = password_hash($password, PASSWORD_BCRYPT);
-
-// Verificar si el correo ya existe
-$sqlCheck = "SELECT id FROM usuarios WHERE email = ?";
-$stmtCheck = mysqli_prepare($conexion, $sqlCheck);
-mysqli_stmt_bind_param($stmtCheck, "s", $email);
-mysqli_stmt_execute($stmtCheck);
-mysqli_stmt_store_result($stmtCheck);
-
-if (mysqli_stmt_num_rows($stmtCheck) > 0) {
-    echo json_encode(['exito' => false, 'mensaje' => 'El correo electrónico ya está registrado.']);
-    mysqli_stmt_close($stmtCheck);
-    mysqli_close($conexion);
-    exit;
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    json_response(['exito' => false, 'mensaje' => 'El correo electrónico no es válido.'], 422);
 }
-mysqli_stmt_close($stmtCheck);
 
-// Insertar el nuevo usuario
-$sql = "INSERT INTO usuarios (nombre, email, password, rol, fecha_registro) VALUES (?, ?, ?, ?, NOW())";
-$stmt = mysqli_prepare($conexion, $sql);
+if (strlen($password) < 6) {
+    json_response(['exito' => false, 'mensaje' => 'La contraseña debe tener al menos 6 caracteres.'], 422);
+}
 
-if ($stmt) {
-    mysqli_stmt_bind_param($stmt, "ssss", $nombre, $email, $passwordHash, $rol);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(['exito' => true, 'mensaje' => 'Usuario registrado con éxito.']);
-    } else {
-        echo json_encode(['exito' => false, 'mensaje' => 'Error en la base de datos: ' . mysqli_error($conexion)]);
+try {
+    $check = $conn->prepare('SELECT id_usuario FROM usuario WHERE email = ? OR cedula = ? LIMIT 1');
+    $check->bind_param('ss', $email, $cedula);
+    $check->execute();
+    $check->store_result();
+
+    if ($check->num_rows > 0) {
+        $check->close();
+        json_response(['exito' => false, 'mensaje' => 'El correo o la cédula ya están registrados.'], 409);
     }
-    
-    mysqli_stmt_close($stmt);
-} else {
-    echo json_encode(['exito' => false, 'mensaje' => 'Error al preparar la consulta.']);
-}
+    $check->close();
 
-mysqli_close($conexion);
-?>
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+
+    $stmt = $conn->prepare(
+        'INSERT INTO usuario (cedula, nombre, apellido, email, password, rol, telefono)
+         VALUES (?, ?, ?, ?, ?, ?, ?)'
+    );
+    $stmt->bind_param('sssssss', $cedula, $nombre, $apellido, $email, $hash, $rol, $telefono);
+    $stmt->execute();
+    $nuevoId = $stmt->insert_id;
+    $stmt->close();
+
+    json_response([
+        'exito'      => true,
+        'mensaje'    => 'Usuario registrado con éxito.',
+        'id_usuario' => $nuevoId,
+    ], 201);
+} catch (Throwable $e) {
+    json_response(['exito' => false, 'mensaje' => 'Error al registrar: ' . $e->getMessage()], 500);
+}

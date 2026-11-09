@@ -1,40 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Menú</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; }
-        .navbar { background-color: #1a365d; color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; }
-        .navbar-links a { color: white; text-decoration: none; margin-left: 20px; font-size: 14px; font-weight: normal; }
-        .navbar-links a:hover { text-decoration: underline; }
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 35px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        h2 { color: #1a365d; margin-top: 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        ul { line-height: 1.8; }
-        a { color: #0056b3; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel principal | S.I.G.S.M.</title>
+  <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-badge">🏥</div>
+      <span>Hospital de Clínicas</span>
+    </div>
 
-    <div class="navbar">
-        <span>Menú del Sistema</span>
-        <div class="navbar-links">
-            <a href="../index.html">Inicio</a> | 
-            <a href="traslados.html">Traslados</a> | 
-            <a href="documentos.html">Documentos</a> | 
-            <a href="login.html">Cerrar Sesión</a>
+    <nav class="navbar-links">
+      <a href="menu.html" class="active">Inicio</a>
+      <a href="traslados.html">Traslados</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="encuestas.html">Encuestas</a>
+    </nav>
+
+    <div class="navbar-user">
+      <div class="user-chip">
+        <div class="user-avatar" data-user-initial>U</div>
+        <div>
+          <span data-user-name>Usuario</span>
+          <small data-user-role>rol</small>
         </div>
+      </div>
+      <a href="login.html" class="btn btn-sm btn-secondary" data-logout>Cerrar sesión</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <div class="page-header">
+      <h1>Panel principal</h1>
+      <p>Bienvenido/a, <strong data-user-name>Usuario</strong>. Este es el resumen del sistema.</p>
     </div>
 
-    <div class="container">
-        <h2>Panel de Módulos</h2>
-        <ul>
-            <li><a href="traslados.html">Gestión de Traslados y Ambulancias</a></li>
-            <li><a href="documentos.html">Gestión de Documentos</a></li>
-        </ul>
-    </div>
+    <section class="stats-grid" id="stats-grid">
+      <div class="stat-card"><div class="stat-value" id="stat-usuarios">—</div><div class="stat-label">Usuarios</div></div>
+      <div class="stat-card accent"><div class="stat-value" id="stat-ambulancias">—</div><div class="stat-label">Ambulancias</div></div>
+      <div class="stat-card warning"><div class="stat-value" id="stat-traslados">—</div><div class="stat-label">Traslados</div></div>
+      <div class="stat-card success"><div class="stat-value" id="stat-documentos">—</div><div class="stat-label">Documentos</div></div>
+      <div class="stat-card"><div class="stat-value" id="stat-encuestas">—</div><div class="stat-label">Encuestas</div></div>
+    </section>
 
+    <section class="card">
+      <div class="section-head">
+        <h2>Módulos del sistema</h2>
+        <span class="badge badge-info" id="resumen-operativo">Cargando…</span>
+      </div>
+
+      <div class="module-grid">
+        <a class="module-card" href="traslados.html">
+          <div class="module-icon">🚑</div>
+          <h3>Traslados y ambulancias</h3>
+          <p>Solicitar traslados, registrar unidades y hacer seguimiento en el mapa.</p>
+        </a>
+
+        <a class="module-card" href="documentos.html">
+          <div class="module-icon">📁</div>
+          <h3>Gestión documental</h3>
+          <p>Subir historias clínicas, informes y certificados con trazabilidad.</p>
+        </a>
+
+        <a class="module-card" href="encuestas.html">
+          <div class="module-icon">📊</div>
+          <h3>Encuestas de satisfacción</h3>
+          <p>Registrar y consultar la opinión de los pacientes sobre la atención.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 MBM Médica — Todos los derechos reservados.</footer>
+
+  <script src="../js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await Hospital.get('../php/estadisticas.php');
+        const d = res.data || {};
+        document.getElementById('stat-usuarios').textContent = d.usuarios ?? '0';
+        document.getElementById('stat-ambulancias').textContent = d.ambulancias ?? '0';
+        document.getElementById('stat-traslados').textContent = d.traslados ?? '0';
+        document.getElementById('stat-documentos').textContent = d.documentos ?? '0';
+        document.getElementById('stat-encuestas').textContent = d.encuestas ?? '0';
+        document.getElementById('resumen-operativo').textContent =
+          (d.en_curso || 0) + ' en curso · ' + (d.disponibles || 0) + ' unidades disponibles';
+      } catch (e) {
+        document.getElementById('resumen-operativo').textContent = 'Sin conexión';
+      }
+    });
+  </script>
 </body>
 </html>

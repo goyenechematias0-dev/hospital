@@ -1,181 +1,169 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.I.G.S.M. - Gestión de Traslados y Ambulancias</title>
-    
-    <!-- Leaflet CSS para el mapa -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f6f9;
-        }
-        .navbar {
-            background-color: #1a365d;
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .navbar-links a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 14px;
-            font-weight: normal;
-        }
-        .navbar-links a:hover {
-            text-decoration: underline;
-        }
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #1a365d;
-            margin-top: 0;
-            font-size: 22px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 10px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #2d3748;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            box-sizing: border-box;
-            font-size: 14px;
-            border: 1px solid #cbd5e0;
-            border-radius: 4px;
-        }
-        .btn-primary {
-            background-color: #1a365d;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-primary:hover {
-            background-color: #2c5282;
-        }
-        .controls {
-            margin-top: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .row-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        #map {
-            height: 400px;
-            width: 100%;
-            border-radius: 6px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traslados y ambulancias | S.I.G.S.M.</title>
+  <link rel="stylesheet" href="../css/estilos.css">
 </head>
 <body>
-
-    <!-- Barra de navegación superior -->
-    <div class="navbar">
-        <span>Gestión de Traslados y Ambulancias</span>
-        <div class="navbar-links">
-            <a href="../index.html">Inicio</a> | 
-            <a href="traslados.html">Traslados</a> | 
-            <a href="documentos.html">Documentos</a> | 
-            <a href="login.html">Cerrar Sesión</a>
-        </div>
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-badge">🏥</div>
+      <span>Hospital de Clínicas</span>
     </div>
 
-    <div class="container">
-        <!-- Formulario: Solicitar Nuevo Traslado -->
-        <h2>Solicitar Nuevo Traslado</h2>
-        <form action="../php/guardarTraslados.php" method="POST">
-            <div class="form-group">
-                <label for="origen">Origen:</label>
-                <input type="text" id="origen" name="origen" required>
-            </div>
-            <div class="form-group">
-                <label for="destino">Destino:</label>
-                <input type="text" id="destino" name="destino" required>
-            </div>
-            <div class="form-group">
-                <label for="acompanante">Acompañante:</label>
-                <input type="text" id="acompanante" name="acompanante">
-            </div>
-            <div class="form-group">
-                <label for="ambulancia">Asignar Ambulancia:</label>
-                <select id="ambulancia" name="ambulancia" required>
-                    <option value="">Seleccione una ambulancia...</option>
-                    <option value="AMB-001">Ambulancia AMB-001</option>
-                    <option value="AMB-002">Ambulancia AMB-002</option>
-                </select>
-            </div>
-            <button type="submit" class="btn-primary">Registrar Traslado</button>
-        </form>
+    <nav class="navbar-links">
+      <a href="menu.html">Inicio</a>
+      <a href="traslados.html" class="active">Traslados</a>
+      <a href="documentos.html">Documentos</a>
+      <a href="encuestas.html">Encuestas</a>
+    </nav>
 
-        <!-- Formulario: Gestión de Flota de Ambulancias -->
-        <h2 style="margin-top: 40px;">Gestión de Flota de Ambulancias</h2>
-        <form action="../php/RegistroDeAmbulancia.php" method="POST">
-            <div class="form-group">
-                <label for="matricula">Matrícula:</label>
-                <input type="text" id="matricula" name="matricula" placeholder="Ej: SAB-1234" required>
-            </div>
-            <button type="submit" class="btn-primary">Registrar Ambulancia</button>
-        </form>
+    <div class="navbar-user">
+      <div class="user-chip">
+        <div class="user-avatar" data-user-initial>U</div>
+        <div>
+          <span data-user-name>Usuario</span>
+          <small data-user-role>rol</small>
+        </div>
+      </div>
+      <a href="login.html" class="btn btn-sm btn-secondary" data-logout>Cerrar sesión</a>
+    </div>
+  </header>
 
-        <!-- Sección de Monitoreo con el Mapa Leaflet -->
-        <h2 style="margin-top: 40px;">Monitoreo de Rutas y Unidades</h2>
-        <div class="controls">
-            <select id="departamento">
-                <option value="Montevideo">Montevideo</option>
+  <main class="page">
+    <div class="page-header">
+      <h1>Gestión de traslados y ambulancias</h1>
+      <p>Solicitá un traslado, registrá una unidad o consultá el estado de la flota.</p>
+    </div>
+
+    <div class="grid-2">
+      <section class="card">
+        <h2>Solicitar nuevo traslado</h2>
+        <div id="alert-traslado" class="alert"></div>
+
+        <form id="form-traslado">
+          <div class="form-group">
+            <label for="origen">Origen *</label>
+            <input class="form-control" type="text" id="origen" name="origen"
+                   placeholder="Ej: Hospital de Clínicas" required>
+          </div>
+
+          <div class="form-group">
+            <label for="destino">Destino *</label>
+            <input class="form-control" type="text" id="destino" name="destino"
+                   placeholder="Ej: Sanatorio Americano" required>
+          </div>
+
+          <div class="form-group">
+            <label for="acompanante">Acompañante</label>
+            <input class="form-control" type="text" id="acompanante" name="acompanante"
+                   placeholder="Nombre del acompañante (opcional)">
+          </div>
+
+          <div class="form-group">
+            <label for="id_ambulancia">Asignar ambulancia</label>
+            <select class="form-control" id="id_ambulancia" name="id_ambulancia">
+              <option value="">Seleccione una ambulancia...</option>
             </select>
+            <span class="form-help">Solo se muestran las unidades disponibles.</span>
+          </div>
 
-            <label for="direccion" style="font-weight: bold; color: #2d3748;">Ingresar dirección de destino:</label>
-            <input type="text" id="direccion" placeholder="Ej: Av. Italia 2870">
+          <div class="form-actions">
+            <button type="submit" class="btn">Registrar traslado</button>
+            <a href="trasladosmap.html" class="btn btn-secondary">Ver mapa de unidades</a>
+          </div>
+        </form>
+      </section>
 
-            <button type="button" id="generatePinBtn" class="btn-primary" style="background-color: #1d3557;">Generar Pin y Ruta</button>
-            
-            <div class="row-buttons">
-                <button type="button" id="crearUnidadBtn" class="btn-primary" style="flex: 1;">+ Crear Unidad</button>
-                <button type="button" id="eliminarUnidadBtn" class="btn-primary" style="flex: 1; background-color: #dc3545;">- Eliminar Unidad</button>
-            </div>
-        </div>
+      <section class="card">
+        <h2>Registrar ambulancia</h2>
+        <div id="alert-ambulancia" class="alert"></div>
 
-        <div id="pinStatus" style="font-size: 13px; color: #555; margin-top: 8px;"></div>
+        <form id="form-ambulancia">
+          <div class="form-group">
+            <label for="matricula">Matrícula *</label>
+            <input class="form-control" type="text" id="matricula" name="matricula"
+                   placeholder="Ej: SAB-1234" required>
+          </div>
 
-        <!-- Contenedor del Mapa -->
-        <div id="map"></div>
+          <div class="form-group">
+            <label for="modelo">Modelo</label>
+            <input class="form-control" type="text" id="modelo" name="modelo"
+                   placeholder="Ej: Mercedes-Benz Sprinter">
+          </div>
+
+          <div class="form-group">
+            <label for="disponibilidad">Estado</label>
+            <select class="form-control" id="disponibilidad" name="disponibilidad">
+              <option value="Disponible">Disponible</option>
+              <option value="En traslado">En traslado</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Agregar ambulancia</button>
+          </div>
+        </form>
+      </section>
     </div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
-    <!-- Script JS para controlar el mapa -->
-    <script src="../js/trasladosmap.js"></script>
+    <section class="card mt-24">
+      <div class="section-head">
+        <h2>Flota de ambulancias</h2>
+        <button type="button" class="btn btn-sm btn-secondary" id="btn-refrescar-amb">Actualizar</button>
+      </div>
+      <div id="alert-flota" class="alert"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Matrícula</th>
+              <th>Modelo</th>
+              <th>Estado</th>
+              <th>Último mantenimiento</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-ambulancias">
+            <tr><td colspan="5" class="empty">Cargando ambulancias…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-head">
+        <h2>Últimos traslados</h2>
+        <button type="button" class="btn btn-sm btn-secondary" id="btn-refrescar-tras">Actualizar</button>
+      </div>
+      <div id="alert-traslados" class="alert"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Origen</th>
+              <th>Destino</th>
+              <th>Ambulancia</th>
+              <th>Solicitante</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-traslados">
+            <tr><td colspan="7" class="empty">Cargando traslados…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© 2026 MBM Médica — Todos los derechos reservados.</footer>
+
+  <script src="../js/app.js"></script>
+  <script src="../js/traslados.js"></script>
 </body>
 </html>

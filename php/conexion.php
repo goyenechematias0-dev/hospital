@@ -1,13 +1,28 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "hospital_clinicas"; // Ajusta esto a "hospital" o "hospital_clinicas" según cómo la hayas creado
+/**
+ * Conexión única a la base de datos del sistema.
+ * XAMPP activo: MySQL 3306 / base "hospital".
+ */
+$host = 'localhost';
+$user = 'root';
+$password = '';
+$database = 'hospital';
 
-$conn = new mysqli($host, $user, $password, $database);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-if ($conn->connect_error) {
-    die(json_encode(["success" => false, "message" => "Error de conexión: " . $conn->connect_error]));
+try {
+    $conn = new mysqli($host, $user, $password, $database);
+    $conn->set_charset('utf8mb4');
+    // Alias para archivos antiguos que usaban $conexion
+    $conexion = $conn;
+} catch (mysqli_sql_exception $e) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => false,
+        'exito'   => false,
+        'message' => 'Error de conexión a la base de datos: ' . $e->getMessage(),
+        'mensaje' => 'Error de conexión a la base de datos: ' . $e->getMessage(),
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
-?>
-

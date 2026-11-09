@@ -1,0 +1,8 @@
+# Archivos subidos por los usuarios
+uploads/*
+!uploads/.gitkeep
+
+# Configuración local / sistema
+.DS_Store
+Thumbs.db
+*.log

@@ -1,35 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <title>login</title>
-   <link rel="stylesheet" href="../css/login.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cerrando sesión...</title>
+  <script>
+    try { localStorage.removeItem('hospital_user'); } catch (e) {}
+    window.location.replace('../index.html');
+  </script>
 </head>
 <body>
-    <header>
-        <img src="../img/login.png" alt="logo" width="100" />
-    </header>
-            <div class="login-container">
-            <img src="../img/login.png" alt="login" width="50" />
-            <h1 id="titulo">inicio</h1> </div>
-            <div class="form-container">
-            <form>
-                <p>Cedula</p>
-                <label for="Cedula"></label>
-                <input type="text" id="Cedula" name="Cedula" required />
-                <br />
-                <p>Contraseña</p>
-                <label for="password"></label>
-                <input type="password" id="password" name="password" required />
-                <br />
-                <input type="submit" value="Iniciar sesión" />
-                </form>
-                <a href="registroFuncionario.html">Registrar Funcionario</a>
-            </div>
-    </main>
-    <footer>
-        <p>Todos los derechos reservados.</p>
-    </footer>
+  <p>Cerrando sesión... <a href="../index.html">Continuar</a></p>
 </body>
-<script src="login.js"></script>
 </html>
